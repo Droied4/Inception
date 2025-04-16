@@ -1,0 +1,13 @@
+services:
+  nginx:
+    build: 
+      context: ${NGINX_PATH}
+      args:
+        NGINX_PORT: ${NGINX_PORT}
+    ports:
+      - "${NGINX_PORT}:80"
+    expose:
+      - "${NGINX_PORT}"
+      - "9000"    
+#volumes:
+#depends_on:
