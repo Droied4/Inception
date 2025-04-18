@@ -1,9 +1,12 @@
 services:
   nginx:
     build: 
-      context: ${NGINX_PATH}
+      context: 
+        ${NGINX_PATH}
       args:
-        NGINX_PORT: ${NGINX_PORT}
+        BASE_IMAGE:   ${BASE_IMAGE}
+        BASE_DIGEST:  ${BASE_DIGEST}
+        NGINX_PORT:   ${NGINX_PORT}
     ports:
       - "${NGINX_PORT}:80"
     expose:

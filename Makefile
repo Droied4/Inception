@@ -29,10 +29,13 @@ NC=\033[0m # No color
 all: up
 	
 up:
-	@$(COMPOSE) $(COMPOSE_PATH) $@ --build --watch
+	@$(COMPOSE) $(COMPOSE_PATH) $@ --build -d
+
+watch:
+	@$(COMPOSE) $(COMPOSE_PATH) up --build --$(@)
 
 it:
-	@$(DOCKER) exec -it $(ID) sh	
+	@$(DOCKER) exec -it $(ID) sh
 
 clean:
 	@$(COMPOSE) $(COMPOSE_PATH) down
@@ -53,4 +56,4 @@ ps:
 images:
 	@$(DOCKER) $@
 
-.PHONY: all clean debug ps images
+.PHONY: all up watch it clean fclean logs ps images
