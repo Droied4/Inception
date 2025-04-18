@@ -5,14 +5,14 @@ ARG NGINX_PORT
 
 EXPOSE ${NGINX_PORT}
 
-WORKDIR /etc/niginx/
+WORKDIR /etc/nginx/
 
 COPY ./conf/nginx.conf .
 
-WORKDIR /usr/share/nginx/html
+WORKDIR /usr/share/nginx/html/
 
 RUN apk update && \
 	apk add --no-cache nginx && \
-	echo "<html><body><h1>¡Hola, Nginx está funcionando!</h1></body></html>" > /usr/share/nginx/html/index.html
+	echo "<html><body><h1>Hola, Nginx esta funcionando!</h1></body></html>" > /usr/share/nginx/html/index.html
 
 CMD ["nginx", "-g", "daemon off;"]
