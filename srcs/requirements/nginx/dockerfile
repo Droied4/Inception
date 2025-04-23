@@ -13,4 +13,6 @@ RUN 	apk update && \
 	mkdir -p /usr/share/nginx/html && \  
 	echo "<html><body><h1>Hola, Nginx esta funcionando!</h1></body></html>" > /usr/share/nginx/html/index.html
 
+ARG NGINX_START
+#CMD [ "${NGINX_START}" ]
 CMD ["nginx", "-g", "daemon off;"]

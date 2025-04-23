@@ -7,10 +7,33 @@ services:
         BASE_IMAGE:   ${BASE_IMAGE}
         BASE_DIGEST:  ${BASE_DIGEST}
         NGINX_PORT:   ${NGINX_PORT}
+        NGINX_START:  ${NGINX_SCRIPT}start.sh
     ports:
-      - "${NGINX_PORT}:80"
-    expose:
-      - "${NGINX_PORT}"
-      - "9000"    
-#volumes:
-#depends_on:
+      - "${NGINX_PORT}:${NGINX_PORT}"
+    volumes:
+      - ${WP_VOLUME}:/var/www/html
+    healthcheck:
+      test: ["CMD", "${NGINX_SCRIPT}check.sh"]
+      interval: 30s
+      retries: 3
+    restart: unless-stopped
+
+  wordpress:
+    build:
+      context:
+        ${WORDPRESS_PATH}
+      args:
+        BASE_IMAGE: ${BASE_IMAGE}
+        BASE_DIGEST: ${BASE_DIGEST}
+        WORDPRESS_PORT: ${WORDPRESS_PORT}
+      ports:
+        - "${WORDPRESS_PORT}:${WORDPRESS_PORT}"
+      volumes:
+        - ${WP_VOLUME}:/var/www/html
+      depends_on:
+          nginx:
+            condition: service_healthy
+      restart: unless-stopped
+
+volumes:
+  ${WP_VOLUME}:

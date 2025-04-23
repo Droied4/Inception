@@ -9,6 +9,7 @@ COMPOSE = $(DOCKER) compose
 # ╚══════════════════════════════════════════════════════════════════════════╝ # 
 
 COMPOSE_PATH = -f ./srcs/docker-compose.yml
+DEV_COMPOSE_PATH = -f ./srcs/docker-compose.dev.yml
 
 # ╔══════════════════════════════════════════════════════════════════════════╗ #  
 #                               COLORS                                         #
@@ -31,8 +32,8 @@ all: up
 up:
 	@$(COMPOSE) $(COMPOSE_PATH) $@ --build -d
 
-watch:
-	@$(COMPOSE) $(COMPOSE_PATH) up --build --$(@)
+dev:
+	@$(COMPOSE) $(DEV_COMPOSE_PATH) up --build --watch
 
 it:
 	@$(DOCKER) exec -it $(ID) sh
@@ -56,4 +57,4 @@ ps:
 images:
 	@$(DOCKER) $@
 
-.PHONY: all up watch it clean fclean logs ps images
+.PHONY: all up dev it clean fclean logs ps images

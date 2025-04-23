@@ -1,0 +1,16 @@
+services:
+  nginx:
+    build: 
+      context: 
+        ${NGINX_PATH}
+      args:
+        BASE_IMAGE:   ${BASE_IMAGE}
+        BASE_DIGEST:  ${BASE_DIGEST}
+        NGINX_PORT:   ${NGINX_PORT}
+        NGINX_START:  ${NGINX_SCRIPT}start.sh
+    ports:
+      - "${NGINX_PORT}:${NGINX_PORT}"
+    volumes:
+      - ${DWP_VOLUME}:/var/www/html
+    restart: unless-stopped
+
