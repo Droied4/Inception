@@ -7,7 +7,7 @@ services:
         BASE_IMAGE:   ${BASE_IMAGE}
         BASE_DIGEST:  ${BASE_DIGEST}
         NGINX_PORT:   ${NGINX_PORT}
-        NGINX_START:  ${NGINX_SCRIPT}start.sh
+        NGINX_START_SCRIPT:  ${SCRIPTS}nginx_start.sh
     ports:
       - "${NGINX_PORT}:${NGINX_PORT}"
     volumes:

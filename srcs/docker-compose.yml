@@ -7,13 +7,13 @@ services:
         BASE_IMAGE:   ${BASE_IMAGE}
         BASE_DIGEST:  ${BASE_DIGEST}
         NGINX_PORT:   ${NGINX_PORT}
-        NGINX_START_SCRIPT:  ${NGINX_SCRIPT}start.sh
+        NGINX_START_SCRIPT:  ${SCRIPTS}nginx_start.sh
     ports:
       - "${NGINX_PORT}:${NGINX_PORT}"
     volumes:
-      - ${WP_VOLUME}:/var/www/html
+      - wp_data:/var/www/html
     healthcheck:
-      test: ["CMD", "${NGINX_SCRIPT}check.sh"]
+      test: ["CMD", "${SCRIPTS}check.sh"]
       interval: 30s
       retries: 3
     restart: unless-stopped
@@ -26,11 +26,11 @@ services:
           BASE_IMAGE: ${BASE_IMAGE}
           BASE_DIGEST: ${BASE_DIGEST}
           MARIADB_PORT: ${MARIADB_PORT}
-        ports:
-          - "${MARIADB_PORT}:${MARIADB_PORT}"
-        volumes:
-          - ${MDB_VOLUME}:/var/www/html
-        restart: unless-stopped
+      ports:
+        - "${MARIADB_PORT}:${MARIADB_PORT}"
+      volumes:
+        - mdb_data:/var/www/html
+      restart: unless-stopped
 
   # wordpress:
   #   build:
@@ -50,5 +50,5 @@ services:
   #     restart: unless-stopped
 
 volumes:
-  ${WP_VOLUME}:
-  ${MDB_VOLUME}:
+  wp_data:  {}
+  mdb_data: {}

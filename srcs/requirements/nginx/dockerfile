@@ -7,14 +7,15 @@ ARG NGINX_PORT
 EXPOSE ${NGINX_PORT}
 
 ARG NGINX_START_SCRIPT
-ARG START_PATH=/usr/local/bin/start.sh
+ARG START_PATH=/usr/local/bin/
+
 COPY ${NGINX_START_SCRIPT} ${START_PATH}
 COPY ./conf/nginx.conf /etc/nginx/
 
 RUN apk update && \
 	apk add --no-cache nginx && \
 	mkdir -p /usr/share/nginx/html && \
-	chmod +x ${START_PATH} && \
+	chmod +x ${START_PATH}nginx_start.sh && \
 	echo "<html><body><h1>Hola, Nginx esta funcionando!</h1></body></html>" > /usr/share/nginx/html/index.html
 
-ENTRYPOINT ["${START_PATH}"]
+ENTRYPOINT ["/usr/local/bin/nginx_start.sh"]

@@ -1,1 +1,13 @@
+# syntax=docker/dockerfile:1
+ARG BASE_IMAGE
+ARG BASE_DIGEST
+FROM ${BASE_IMAGE}@sha256:${BASE_DIGEST}
 
+ARG MARIADB_PORT
+EXPOSE ${MARIADB_PORT}
+
+RUN 	apk update && \
+	apk add --no-cache mariadb && \
+	/etc/init.d/mariadb setup
+
+ENTRYPOINT ["rc-service", "mariadb", "start"]
