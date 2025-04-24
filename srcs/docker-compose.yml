@@ -7,7 +7,7 @@ services:
         BASE_IMAGE:   ${BASE_IMAGE}
         BASE_DIGEST:  ${BASE_DIGEST}
         NGINX_PORT:   ${NGINX_PORT}
-        NGINX_START:  ${NGINX_SCRIPT}start.sh
+        NGINX_START_SCRIPT:  ${NGINX_SCRIPT}start.sh
     ports:
       - "${NGINX_PORT}:${NGINX_PORT}"
     volumes:
@@ -18,22 +18,37 @@ services:
       retries: 3
     restart: unless-stopped
 
-  wordpress:
-    build:
-      context:
-        ${WORDPRESS_PATH}
-      args:
-        BASE_IMAGE: ${BASE_IMAGE}
-        BASE_DIGEST: ${BASE_DIGEST}
-        WORDPRESS_PORT: ${WORDPRESS_PORT}
-      ports:
-        - "${WORDPRESS_PORT}:${WORDPRESS_PORT}"
-      volumes:
-        - ${WP_VOLUME}:/var/www/html
-      depends_on:
-          nginx:
-            condition: service_healthy
-      restart: unless-stopped
+  mariadb:
+      build:
+        context:
+          ${MARIADB_PATH}
+        args:
+          BASE_IMAGE: ${BASE_IMAGE}
+          BASE_DIGEST: ${BASE_DIGEST}
+          MARIADB_PORT: ${MARIADB_PORT}
+        ports:
+          - "${MARIADB_PORT}:${MARIADB_PORT}"
+        volumes:
+          - ${MDB_VOLUME}:/var/www/html
+        restart: unless-stopped
+
+  # wordpress:
+  #   build:
+  #     context:
+  #       ${WORDPRESS_PATH}
+  #     args:
+  #       BASE_IMAGE: ${BASE_IMAGE}
+  #       BASE_DIGEST: ${BASE_DIGEST}
+  #       WORDPRESS_PORT: ${WORDPRESS_PORT}
+  #     ports:
+  #       - "${WORDPRESS_PORT}:${WORDPRESS_PORT}"
+  #     volumes:
+  #       - ${WP_VOLUME}:/var/www/html
+  #     depends_on:
+  #         nginx:
+  #           condition: service_healthy
+  #     restart: unless-stopped
 
 volumes:
   ${WP_VOLUME}:
+  ${MDB_VOLUME}:

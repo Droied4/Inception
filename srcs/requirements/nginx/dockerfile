@@ -6,13 +6,15 @@ FROM ${BASE_IMAGE}@sha256:${BASE_DIGEST}
 ARG NGINX_PORT
 EXPOSE ${NGINX_PORT}
 
+ARG NGINX_START_SCRIPT
+ARG START_PATH=/usr/local/bin/start.sh
+COPY ${NGINX_START_SCRIPT} ${START_PATH}
 COPY ./conf/nginx.conf /etc/nginx/
 
-RUN 	apk update && \
+RUN apk update && \
 	apk add --no-cache nginx && \
-	mkdir -p /usr/share/nginx/html && \  
+	mkdir -p /usr/share/nginx/html && \
+	chmod +x ${START_PATH} && \
 	echo "<html><body><h1>Hola, Nginx esta funcionando!</h1></body></html>" > /usr/share/nginx/html/index.html
 
-ARG NGINX_START
-#CMD [ "${NGINX_START}" ]
-CMD ["nginx", "-g", "daemon off;"]
+ENTRYPOINT ["${START_PATH}"]
