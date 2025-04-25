@@ -7,7 +7,6 @@ ARG MARIADB_PORT
 EXPOSE ${MARIADB_PORT}
 
 RUN 	apk update && \
-	apk add --no-cache mariadb && \
-	/etc/init.d/mariadb setup
+	apk add --no-cache mariadb
 
-ENTRYPOINT ["rc-service", "mariadb", "start"]
+CMD ["sh", "-c", "while true; do echo 'Probando paquetes...'; sleep 5; done"]

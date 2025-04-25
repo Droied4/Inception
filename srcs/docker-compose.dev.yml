@@ -13,3 +13,17 @@ services:
     volumes:
       - ${DWP_VOLUME}:/var/www/html
     restart: unless-stopped
+
+  mariadb:
+    build:
+      context:
+        ${MARIADB_PATH}
+      args:
+        BASE_IMAGE: ${BASE_IMAGE}
+        BASE_DIGEST: ${BASE_DIGEST}
+        MARIADB_PORT: ${MARIADB_PORT}
+    ports:
+      - "${MARIADB_PORT}:${MARIADB_PORT}"
+    volumes:
+      - ${DMDB_VOLUME}:/var/www/html
+    restart: unless-stopped
