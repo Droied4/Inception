@@ -6,11 +6,12 @@ FROM ${BASE_IMAGE}@sha256:${BASE_DIGEST}
 ARG NGINX_PORT
 EXPOSE ${NGINX_PORT}
 
-ARG NGINX_START_SCRIPT
+ARG NGINX_SCRIPT
+ARG NGINX_CONF
 ARG START_PATH=/usr/local/bin/
 
-COPY ${NGINX_START_SCRIPT} ${START_PATH}
-COPY ./conf/nginx.conf /etc/nginx/
+COPY ${NGINX_SCRIPT}nginx_start.sh ${START_PATH}
+COPY ${NGINX_CONF}nginx.conf /etc/nginx/
 
 RUN apk update && \
 	apk add --no-cache nginx && \

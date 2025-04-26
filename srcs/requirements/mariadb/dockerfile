@@ -4,9 +4,17 @@ ARG BASE_DIGEST
 FROM ${BASE_IMAGE}@sha256:${BASE_DIGEST}
 
 ARG MARIADB_PORT
+ARG MARIADB_SCRIPT
 EXPOSE ${MARIADB_PORT}
 
 RUN 	apk update && \
-	apk add --no-cache mariadb
+	apk add --no-cache mariadb su-exec && \
+	mkdir -p /run/mysqld /var/lib/mysql && \
+    	chown -R mysql:mysql /run/mysqld /var/lib/mysql && \
+	mysql_install_db --user=mysql --datadir=/var/lib/mysql
 
-CMD ["sh", "-c", "while true; do echo 'Probando paquetes...'; sleep 5; done"]
+COPY ${MARIADB_SCRIPT}mdb_start.sh /start.sh
+
+RUN chmod +x /start.sh
+
+ENTRYPOINT ["/start.sh"]
