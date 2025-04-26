@@ -25,8 +25,8 @@ services:
         MARIADB_PORT:   ${MARIADB_PORT}
         MARIADB_SCRIPT: ${SCRIPTS}
     environment:
-      MYSQL_ROOT_PASSWORD: rootpass
-      MYSQL_DATABASE: mydb
+      - MYSQL_ROOT_PASSWORD
+      - MYSQL_DATABASE
     ports:
       - "${MARIADB_PORT}:${MARIADB_PORT}"
     volumes:

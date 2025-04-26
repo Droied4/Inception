@@ -4,10 +4,11 @@ services:
       context: 
         ${NGINX_PATH}
       args:
-        BASE_IMAGE:   ${BASE_IMAGE}
-        BASE_DIGEST:  ${BASE_DIGEST}
-        NGINX_PORT:   ${NGINX_PORT}
-        NGINX_START_SCRIPT:  ${SCRIPTS}nginx_start.sh
+        BASE_IMAGE:         ${BASE_IMAGE}
+        BASE_DIGEST:        ${BASE_DIGEST}
+        NGINX_PORT:         ${NGINX_PORT}
+        NGINX_SCRIPT:       ${SCRIPTS}
+        NGINX_CONF:         ${CONF}
     ports:
       - "${NGINX_PORT}:${NGINX_PORT}"
     volumes:
@@ -26,6 +27,10 @@ services:
           BASE_IMAGE: ${BASE_IMAGE}
           BASE_DIGEST: ${BASE_DIGEST}
           MARIADB_PORT: ${MARIADB_PORT}
+          MARIADB_SCRIPT: ${SCRIPTS}
+      environment:
+        MYSQL_ROOT_PASSWORD: rootpass
+        MYSQL_DATABASE: mydb
       ports:
         - "${MARIADB_PORT}:${MARIADB_PORT}"
       volumes:
