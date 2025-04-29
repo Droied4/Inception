@@ -27,6 +27,7 @@ services:
     environment:
       - MYSQL_ROOT_PASSWORD
       - MYSQL_DATABASE
+      - MARIADB_PORT
     ports:
       - "${MARIADB_PORT}:${MARIADB_PORT}"
     volumes:

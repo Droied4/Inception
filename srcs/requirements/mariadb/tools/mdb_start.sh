@@ -1,4 +1,6 @@
 #!/bin/sh
 
+envsubst < /mdb.cnf.template > /etc/my.cnf
+
 # Lanzar el servidor como usuario mysql
-exec su-exec mysql mysqld --port=$MARIADB_PORT --datadir=/var/lib/mysql --user=mysql
+exec su-exec mysql mysqld --defaults-file=/etc/my.cnf

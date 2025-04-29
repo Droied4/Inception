@@ -6,15 +6,18 @@ FROM ${BASE_IMAGE}@sha256:${BASE_DIGEST}
 ARG MARIADB_PORT
 ARG MARIADB_SCRIPT
 EXPOSE ${MARIADB_PORT}
+ENV MARIADB_PORT=${MARIADB_PORT}
 
 RUN 	apk update && \
-	apk add --no-cache mariadb su-exec && \
+	apk add --no-cache mariadb su-exec gettext && \
 	mkdir -p /run/mysqld /var/lib/mysql && \
     	chown -R mysql:mysql /run/mysqld /var/lib/mysql && \
 	mysql_install_db --user=mysql --datadir=/var/lib/mysql
 
 COPY ${MARIADB_SCRIPT}mdb_start.sh /start.sh
+COPY ${MARIADB_SCRIPT}mdb.cnf.template /mdb.cnf.template
 
-RUN chmod +x /start.sh
+RUN chmod +x /start.sh && \
+    chmod +r /mdb.cnf.template
 
 ENTRYPOINT ["/start.sh"]
