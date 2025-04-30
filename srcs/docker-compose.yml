@@ -1,5 +1,6 @@
 services:
   nginx:
+    container_name: nginx
     build: 
       context: 
         ${NGINX_PATH}
@@ -12,7 +13,9 @@ services:
     ports:
       - "${NGINX_PORT}:${NGINX_PORT}"
     volumes:
-      - wp_data:/var/www/html
+      - ${WP_VOLUME}:/var/www/html
+    networks:
+      - ${NETWORK}
     healthcheck:
       test: ["CMD", "${SCRIPTS}check.sh"]
       interval: 30s
@@ -20,6 +23,7 @@ services:
     restart: unless-stopped
 
   mariadb:
+      container_name: mariadb
       build:
         context:
           ${MARIADB_PATH}
@@ -34,10 +38,13 @@ services:
       ports:
         - "${MARIADB_PORT}:${MARIADB_PORT}"
       volumes:
-        - mdb_data:/var/www/html
+        - ${MDB_VOLUME}:/var/www/html
+      networks:
+        - ${NETWORK}
       restart: unless-stopped
 
   # wordpress:
+  #   container_name: wordpress
   #   build:
   #     context:
   #       ${WORDPRESS_PATH}
@@ -49,11 +56,13 @@ services:
   #       - "${WORDPRESS_PORT}:${WORDPRESS_PORT}"
   #     volumes:
   #       - ${WP_VOLUME}:/var/www/html
+  #     networks:
+  #       - ${NETWORK}
   #     depends_on:
   #         nginx:
   #           condition: service_healthy
   #     restart: unless-stopped
 
-volumes:
-  wp_data:  {}
-  mdb_data: {}
+networks:
+  ${NETWORK}:
+    driver: bridge

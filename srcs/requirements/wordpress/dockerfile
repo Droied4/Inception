@@ -6,3 +6,12 @@ FROM ${BASE_IMAGE}@sha256:${BASE_DIGEST}
 ARG WORDPRESS_PORT
 EXPOSE ${WORDPRESS_PORT}
 
+RUN	apk update && \
+	apk add --no-cache curl php82 php82-fpm && \
+	mkdir -p /usr/share/webapps/ && \
+	cd /usr/share/webapps/ && \
+	curl -O https://wordpress.org/wordpress-6.8.tar.gz && \
+	tar -xzvf wordpress-6.8.tar.gz && \
+	rm wordpress-6.8.tar.gz
+
+CMD ["sh", "-c", "while true; do sleep 60; done"]

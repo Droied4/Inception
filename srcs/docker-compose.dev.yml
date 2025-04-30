@@ -1,5 +1,9 @@
+networks:
+  app-network: {}
+
 services:
   nginx:
+    container_name: nginx
     build: 
       context: 
         ${NGINX_PATH}
@@ -12,10 +16,13 @@ services:
     ports:
       - "${NGINX_PORT}:${NGINX_PORT}"
     volumes:
-      - ${DWP_VOLUME}:/var/www/html
+      - ${WP_VOLUME}:/var/www/html
+    networks:
+      - ${NETWORK}
     restart: unless-stopped
 
   mariadb:
+    container_name: mariadb
     build:
       context:
         ${MARIADB_PATH}
@@ -31,5 +38,27 @@ services:
     ports:
       - "${MARIADB_PORT}:${MARIADB_PORT}"
     volumes:
-      - ${DMDB_VOLUME}:/var/www/html
+      - ${MDB_VOLUME}:/var/www/html
+    networks:
+      - ${NETWORK}
     restart: unless-stopped
+
+  wordpress:
+    container_name: wordpress
+    build:
+      context:
+        ${WORDPRESS_PATH}
+      args:
+        BASE_IMAGE:       ${BASE_IMAGE}
+        BASE_DIGEST:      ${BASE_DIGEST}
+        WORDPRESS_PORT:   ${WORDPRESS_PORT}
+        WORDPRESS_SCRIPT: ${SCRIPTS}
+    ports:
+      - "${WORDPRESS_PORT}:${WORDPRESS_PORT}"
+    volumes:
+      - ${WP_VOLUME}:/var/www/html
+    networks:
+      - ${NETWORK}
+    restart: unless-stopped
+
+#CMD ["sh", "-c", "while true; do sleep 60; done"]
