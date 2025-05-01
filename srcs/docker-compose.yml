@@ -5,7 +5,6 @@ services:
       context: 
         ${NGINX_PATH}
       args:
-        BASE_IMAGE:         ${BASE_IMAGE}
         BASE_DIGEST:        ${BASE_DIGEST}
         NGINX_PORT:         ${NGINX_PORT}
         NGINX_SCRIPT:       ${SCRIPTS}
@@ -28,7 +27,6 @@ services:
         context:
           ${MARIADB_PATH}
         args:
-          BASE_IMAGE: ${BASE_IMAGE}
           BASE_DIGEST: ${BASE_DIGEST}
           MARIADB_PORT: ${MARIADB_PORT}
           MARIADB_SCRIPT: ${SCRIPTS}
@@ -49,7 +47,6 @@ services:
   #     context:
   #       ${WORDPRESS_PATH}
   #     args:
-  #       BASE_IMAGE: ${BASE_IMAGE}
   #       BASE_DIGEST: ${BASE_DIGEST}
   #       WORDPRESS_PORT: ${WORDPRESS_PORT}
   #     ports:

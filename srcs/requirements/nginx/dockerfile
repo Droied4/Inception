@@ -1,7 +1,6 @@
 # syntax=docker/dockerfile:1
-ARG BASE_IMAGE
 ARG BASE_DIGEST
-FROM ${BASE_IMAGE}@sha256:${BASE_DIGEST}
+FROM alpine@sha256:${BASE_DIGEST}
 
 ARG NGINX_PORT
 EXPOSE ${NGINX_PORT}
@@ -10,13 +9,15 @@ ARG NGINX_SCRIPT
 ARG NGINX_CONF
 ARG START_PATH=/usr/local/bin/
 
-COPY ${NGINX_SCRIPT}nginx_start.sh ${START_PATH}
+RUN 	apk update && \
+	apk add --no-cache nginx && \
+	mkdir -p /usr/share/nginx/html
+
 COPY ${NGINX_CONF}nginx.conf /etc/nginx/
 
-RUN apk update && \
-	apk add --no-cache nginx && \
-	mkdir -p /usr/share/nginx/html && \
-	chmod +x ${START_PATH}nginx_start.sh && \
+COPY ${NGINX_SCRIPT}nginx_start.sh ${START_PATH}
+
+RUN	chmod +x ${START_PATH}nginx_start.sh && \
 	echo "<html><body><h1>Hola, Nginx esta funcionando!</h1></body></html>" > /usr/share/nginx/html/index.html
 
 ENTRYPOINT ["/usr/local/bin/nginx_start.sh"]
