@@ -44,7 +44,7 @@ clean:
 fclean: clean images
 	@echo
 	@printf "$(RED)Removing images above$(NC)\n"
-	@$(DOCKER) image prune -a
+	@$(DOCKER) container prune -f && $(DOCKER) image prune -a -f
 	@echo
 	@printf "$(GREEN)COMPLETE! $(NC)\n"
 
@@ -52,7 +52,7 @@ logs:
 	@$(COMPOSE) $(COMPOSE_PATH) $@
 
 ps:
-	@$(COMPOSE) $(COMPOSE_PATH) $@
+	@$(COMPOSE) $(COMPOSE_PATH) $@ -a
 
 images:
 	@$(DOCKER) $@

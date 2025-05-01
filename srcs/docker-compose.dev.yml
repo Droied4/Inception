@@ -36,7 +36,7 @@ services:
     ports:
       - "${MARIADB_PORT}:${MARIADB_PORT}"
     volumes:
-      - ${MDB_VOLUME}:/var/www/html
+      - ${MDB_VOLUME}:/var/lib/mysql
     networks:
       - ${NETWORK}
     restart: unless-stopped

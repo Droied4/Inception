@@ -61,5 +61,5 @@ services:
   #     restart: unless-stopped
 
 networks:
-  ${NETWORK}:
+  app-network:
     driver: bridge

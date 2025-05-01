@@ -6,14 +6,13 @@ ARG MARIADB_PORT
 ARG MARIADB_SCRIPT
 
 RUN 	apk update && \
-	apk add --no-cache mariadb su-exec gettext && \
-	mkdir -p /run/mysqld /var/lib/mysql && \
-    	chown -R mysql:mysql /run/mysqld /var/lib/mysql && \
-	mysql_install_db --user=mysql --datadir=/var/lib/mysql
+	apk add --no-cache mariadb su-exec
 
-COPY 	--chmod=444 ${MARIADB_SCRIPT}mdb.cnf.template /
+RUN	mkdir -p /run/mysqld /var/lib/mysql && \
+	chown -R mysql:mysql /var/lib/mysql /run/mysqld
+
 COPY 	--chmod=755 ${MARIADB_SCRIPT}mdb_entrypoint.sh /entrypoint.sh
 
-EXPOSE ${MARIADB_PORT}
 ENTRYPOINT ["/entrypoint.sh"]
+EXPOSE ${MARIADB_PORT}
 CMD ["mysqld"]
