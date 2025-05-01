@@ -11,7 +11,7 @@ RUN 	apk update && \
     	chown -R mysql:mysql /run/mysqld /var/lib/mysql && \
 	mysql_install_db --user=mysql --datadir=/var/lib/mysql
 
-COPY 	--chmod=444 ${MARIADB_SCRIPT}mdb.cnf.template /mdb.cnf.template
+COPY 	--chmod=444 ${MARIADB_SCRIPT}mdb.cnf.template /
 COPY 	--chmod=755 ${MARIADB_SCRIPT}mdb_entrypoint.sh /entrypoint.sh
 
 EXPOSE ${MARIADB_PORT}

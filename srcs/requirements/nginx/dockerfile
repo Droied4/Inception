@@ -12,10 +12,10 @@ RUN 	apk update && \
 	mkdir -p /usr/share/nginx/html
 
 COPY --chmod=644 ${NGINX_CONF}nginx.conf /etc/nginx/
-COPY --chmod=744 ${NGINX_SCRIPT}nginx_entrypoint.sh /
+COPY --chmod=744 ${NGINX_SCRIPT}nginx_entrypoint.sh /entrypoint.sh
 
 RUN	echo "<html><body><h1>Hola, Nginx esta funcionando!</h1></body></html>" > /usr/share/nginx/html/index.html
 
 EXPOSE ${NGINX_PORT}
-ENTRYPOINT ["/nginx_entrypoint.sh"]
+ENTRYPOINT ["/entrypoint.sh"]
 CMD ["nginx"]
