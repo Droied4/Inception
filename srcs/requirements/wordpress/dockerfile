@@ -3,7 +3,6 @@ ARG BASE_DIGEST
 FROM alpine@sha256:${BASE_DIGEST}
 
 ARG WORDPRESS_PORT
-EXPOSE ${WORDPRESS_PORT}
 
 RUN	apk update && \
 	apk add --no-cache curl php82 php82-fpm && \
@@ -13,4 +12,5 @@ RUN	apk update && \
 	tar -xzvf wordpress-6.8.tar.gz && \
 	rm wordpress-6.8.tar.gz
 
+EXPOSE ${WORDPRESS_PORT}
 CMD ["sh", "-c", "while true; do sleep 60; done"]

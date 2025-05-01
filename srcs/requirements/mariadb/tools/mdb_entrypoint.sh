@@ -3,4 +3,4 @@
 envsubst < /mdb.cnf.template > /etc/my.cnf
 
 # Lanzar el servidor como usuario mysql
-exec su-exec mysql mysqld --defaults-file=/etc/my.cnf
+exec su-exec mysql $@

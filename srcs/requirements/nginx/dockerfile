@@ -3,21 +3,19 @@ ARG BASE_DIGEST
 FROM alpine@sha256:${BASE_DIGEST}
 
 ARG NGINX_PORT
-EXPOSE ${NGINX_PORT}
 
 ARG NGINX_SCRIPT
 ARG NGINX_CONF
-ARG START_PATH=/usr/local/bin/
 
 RUN 	apk update && \
 	apk add --no-cache nginx && \
 	mkdir -p /usr/share/nginx/html
 
-COPY ${NGINX_CONF}nginx.conf /etc/nginx/
+COPY --chmod=644 ${NGINX_CONF}nginx.conf /etc/nginx/
+COPY --chmod=744 ${NGINX_SCRIPT}nginx_entrypoint.sh /
 
-COPY ${NGINX_SCRIPT}nginx_start.sh ${START_PATH}
+RUN	echo "<html><body><h1>Hola, Nginx esta funcionando!</h1></body></html>" > /usr/share/nginx/html/index.html
 
-RUN	chmod +x ${START_PATH}nginx_start.sh && \
-	echo "<html><body><h1>Hola, Nginx esta funcionando!</h1></body></html>" > /usr/share/nginx/html/index.html
-
-ENTRYPOINT ["/usr/local/bin/nginx_start.sh"]
+EXPOSE ${NGINX_PORT}
+ENTRYPOINT ["/nginx_entrypoint.sh"]
+CMD ["nginx"]
