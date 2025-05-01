@@ -2,11 +2,12 @@
 ARG BASE_DIGEST
 FROM alpine@sha256:${BASE_DIGEST}
 
+ARG MARIADB_VERSION
 ARG MARIADB_PORT
 ARG MARIADB_SCRIPT
 
 RUN 	apk update && \
-	apk add --no-cache mariadb su-exec
+	apk add --no-cache mariadb=${MARIADB_VERSION} su-exec mariadb-client=${MARIADB_VERSION}
 
 RUN	mkdir -p /run/mysqld /var/lib/mysql && \
 	chown -R mysql:mysql /var/lib/mysql /run/mysqld

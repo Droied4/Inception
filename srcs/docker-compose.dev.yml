@@ -26,13 +26,18 @@ services:
       context:
         ${MARIADB_PATH}
       args:
-        BASE_DIGEST:    ${BASE_DIGEST}
-        MARIADB_PORT:   ${MARIADB_PORT}
-        MARIADB_SCRIPT: ${SCRIPTS}
+        BASE_DIGEST:      ${BASE_DIGEST}
+        MARIADB_PORT:     ${MARIADB_PORT}
+        MARIADB_SCRIPT:   ${SCRIPTS}
+        MARIADB_VERSION:  ${MARIADB_VERSION}
     environment:
+      - MYSQL_USER
+      - MYSQL_USER_PASSWORD
+      - MYSQL_ROOT
       - MYSQL_ROOT_PASSWORD
       - MYSQL_DATABASE
       - MARIADB_PORT
+      - MYSQL_DATADIR
     ports:
       - "${MARIADB_PORT}:${MARIADB_PORT}"
     volumes:
