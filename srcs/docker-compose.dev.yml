@@ -11,6 +11,7 @@ services:
         BASE_DIGEST:        ${BASE_DIGEST}
         NGINX_PORT:         ${NGINX_PORT}
         NGINX_SCRIPT:       ${SCRIPTS}
+        NGINX_VERSION:      ${NGINX_VERSION}
         NGINX_CONF:         ${CONF}
     ports:
       - "${NGINX_PORT}:${NGINX_PORT}"
