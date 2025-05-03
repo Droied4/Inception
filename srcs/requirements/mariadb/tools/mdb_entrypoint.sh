@@ -1,5 +1,7 @@
 #!/bin/sh
 
+set -e
+
 #CONFIG FILE
 cat << EOF > /etc/my.cnf
 [mysqld]
