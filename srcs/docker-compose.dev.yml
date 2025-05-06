@@ -68,8 +68,9 @@ services:
         ${WORDPRESS_PATH}
       args:
         BASE_DIGEST:      ${BASE_DIGEST}
-        WORDPRESS_PORT:   ${WORDPRESS_PORT}
-        WORDPRESS_SCRIPT: ${SCRIPTS}
+        WP_PORT:          ${WORDPRESS_PORT}
+        WP_SCRIPT:        ${SCRIPTS}
+        WP_CONF:          ${CONF}
         WP_VERSION:       ${WP_VERSION}
     secrets:
       - db_password
@@ -81,12 +82,15 @@ services:
       - WP_CHARSET
       - WP_PREFIX
       - WP_DEBUG
+      - WP_VERSION
     expose:
       - "${WORDPRESS_PORT}"
     volumes:
       - ${WP_VOLUME}:/var/www/html
     networks:
       - ${NETWORK}
+    depends_on:
+      - mariadb
     restart: unless-stopped
 
 #CMD ["sh", "-c", "while true; do sleep 60; done"]

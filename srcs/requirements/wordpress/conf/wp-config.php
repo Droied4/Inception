@@ -2,21 +2,31 @@
 
 $db_password_file="/run/secrets/db_password";
 $db_password=file_get_contents($db_password_file);
-if (db_password === false)
+if ($db_password === false)
 {
 	echo "file {$db_password_file} not found";
 	exit;
 }
 
-define( 'DB_NAME', "${WP_DB}" );
-define( 'DB_USER', "${WP_DB_USER}" );
-define( 'DB_PASSWORD', "$db_password" );
-define( 'DB_HOST', "${WP_HOST}" );
-define( 'DB_CHARSET', "${WP_CHARSET}" );
+define( 'DB_NAME', 'mydb' );
+define( 'DB_USER', 'deordone') );
+define( 'DB_PASSWORD', 'h1234' );
+define( 'DB_HOST', 'mariadb:3306' );
+define( 'DB_CHARSET', 'utf8') );
 define( 'DB_COLLATE', '' );
 
-$table_prefix = "${WP_PREFIX}";
-
+$table_prefix = 'wp_';
+ 
+/*
+define( 'DB_NAME', getenv('WP_DB') );
+define( 'DB_USER', getenv('WP_DB_USER') );
+define( 'DB_PASSWORD', "$db_password" );
+define( 'DB_HOST', getenv('WP_HOST') );
+define( 'DB_CHARSET', getenv('WP_CHARSET') );
+define( 'DB_COLLATE', '' );
+$table_prefix = getenv('WP_PREFIX');
+ */
+ 
 /**
  * For developers: WordPress debugging mode.
  *
@@ -27,12 +37,8 @@ $table_prefix = "${WP_PREFIX}";
  * @link https://developer.wordpress.org/advanced-administration/debug/debug-wordpress/
  */
 
-define( 'WP_DEBUG', ${WP_DEBUG} );
-
 /** Absolute path to the WordPress directory. */
-if ( ! defined( 'ABSPATH' ) ) {
-	define( 'ABSPATH', __DIR__ . '/' );
-}
+define( 'ABSPATH', '/var/www/html/wordpress' );
 
 /** Sets up WordPress vars and included files. */
 require_once ABSPATH . 'wp-settings.php';

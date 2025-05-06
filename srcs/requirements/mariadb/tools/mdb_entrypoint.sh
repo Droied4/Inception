@@ -18,7 +18,7 @@ if [ -d "${MYSQL_DATADIR}/mysql" ]; then
 	echo "Database already initialized, starting MariaDB..."
 else
 
-mysql_install_db --user=mysql --datadir=${MYSQL_DATADIR}
+mysql_install_db --user=mysql --datadir=${MYSQL_DATADIR} > /dev/null 2>&1
 
 mysqld --datadir=${MYSQL_DATADIR} &
 
@@ -41,12 +41,12 @@ db_root_password=$(cat $db_root_password_file)
 cat << EOF > ${MYSQL_DATADIR}/init-db.sql
 CREATE DATABASE IF NOT EXISTS \`${MYSQL_DATABASE}\`;
 
-CREATE USER IF NOT EXISTS "${MYSQL_ROOT}"@"localhost" IDENTIFIED BY "$db_root_password";
+CREATE USER IF NOT EXISTS "${MYSQL_ROOT}"@"%" IDENTIFIED BY "$db_root_password";
 ALTER USER 'root'@'localhost' IDENTIFIED BY "$db_root_password";
-GRANT ALL PRIVILEGES ON \`${MYSQL_DATABASE}\`.* TO "${MYSQL_ROOT}"@"localhost" WITH GRANT OPTION;
+GRANT ALL PRIVILEGES ON \`${MYSQL_DATABASE}\`.* TO "${MYSQL_ROOT}"@"%" WITH GRANT OPTION;
 
-CREATE USER IF NOT EXISTS "${MYSQL_USER}"@"localhost" IDENTIFIED BY "$db_password";
-GRANT ALL PRIVILEGES ON \`${MYSQL_DATABASE}\`.* TO "${MYSQL_USER}"@"localhost";
+CREATE USER IF NOT EXISTS "${MYSQL_USER}"@"%" IDENTIFIED BY "$db_password";
+GRANT ALL PRIVILEGES ON \`${MYSQL_DATABASE}\`.* TO "${MYSQL_USER}"@"%";
 
 FLUSH PRIVILEGES;
 EOF
@@ -60,7 +60,7 @@ fi
 
 echo "Database Created!"
 
-mysql -u root -p"$db_root_password" < ${MYSQL_DATADIR}/init-db.sql
+mysql -u root -p"$db_root_password" < ${MYSQL_DATADIR}/init-db.sql > /dev/null 2>&1
 mysqladmin shutdown -u root -p"$db_root_password"
 
 fi

@@ -2,19 +2,40 @@
 ARG BASE_DIGEST
 FROM alpine@sha256:${BASE_DIGEST}
 
-ARG WORDPRESS_PORT
+ARG WP_PORT
+ARG WP_SCRIPT
+ARG WP_CONF
 ARG WP_VERSION
 ARG PHP_VERSION=php82
 ARG CURL_VERSION=8.12.1-r0
-ARG GTXT_VERSION=0.22.5-r0
 
 RUN	apk update && \
-	apk add --no-cache curl=${CURL_VERSION} ${PHP_VERSION} ${PHP_VERSION}-fpm gettext=${GTXT_VERSION} && \
-	mkdir -p /usr/share/webapps/ && \
-	cd /usr/share/webapps/ && \
-	curl -O https://wordpress.org/wordpress-${WP_VERSION}.tar.gz && \
-	tar -xzvf wordpress-${WP_VERSION}.tar.gz && \
-	rm wordpress-${WP_VERSION}.tar.gz
+	apk add --no-cache \
+		curl=${CURL_VERSION} \
+		${PHP_VERSION} \
+		${PHP_VERSION}-fpm \ 
+		${PHP_VERSION}-mysqli \
+		php82-session \ 
+		php82-opcache \
+		php82-gd \
+		php82-json \
+		php82-mbstring \
+		php82-curl \ 
+		php82-dom \
+		php82-xml \
+		php82-bcmath \
+		php82-exif \
+		php82-intl \
+		php82-zip && \
+		curl -O https://wordpress.org/wordpress-${WP_VERSION}.tar.gz && \
+		tar -xzvf wordpress-${WP_VERSION}.tar.gz && \
+		rm wordpress-${WP_VERSION}.tar.gz && \
+		sed -i 's/^listen = 127\.0\.0\.1:9000/listen = 0.0.0.0:9000/' /etc/php82/php-fpm.d/www.conf 
 
-EXPOSE ${WORDPRESS_PORT}
-CMD ["sh", "-c", "while true; do sleep 60; done"]
+COPY	--chmod=644 ${WP_CONF}wp-config.php /wordpress/
+COPY	--chmod=755 ${WP_SCRIPT}wp_entrypoint.sh /entrypoint.sh
+
+ENTRYPOINT ["/entrypoint.sh"]
+EXPOSE ${WP_PORT}
+CMD ["php-fpm82"]
+#CMD ["sh", "-c", "while true; do sleep 60; done"]
