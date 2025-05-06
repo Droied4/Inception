@@ -2,6 +2,7 @@
 
 set -e
 
+echo "Copying configuration file"
 #CONFIG FILE
 cat << EOF > /etc/my.cnf
 [mysqld]
@@ -12,6 +13,7 @@ bind-address=0.0.0.0
 socket=/run/mysqld/mysqld.sock
 EOF
 
+echo "Creating Database"
 if [ -d "${MYSQL_DATADIR}/mysql" ]; then
 	echo "Database already initialized, starting MariaDB..."
 else
@@ -21,7 +23,7 @@ mysql_install_db --user=mysql --datadir=${MYSQL_DATADIR}
 mysqld --datadir=${MYSQL_DATADIR} &
 
 while ! mysqladmin ping --silent; do
-    echo "Esperando a que MariaDB esté listo..."
+    echo "Waiting for Mariadb..."
     sleep 1
 done
 
@@ -39,11 +41,11 @@ GRANT ALL PRIVILEGES ON \`${MYSQL_DATABASE}\`.* TO "${MYSQL_USER}"@"localhost";
 FLUSH PRIVILEGES;
 EOF
 
+echo "Database Created!"
+
 mysql -u root p${MYSQL_ROOT_PASSWORD} < ${MYSQL_DATADIR}/init-db.sql
 mysqladmin shutdown -u root -p"$MYSQL_ROOT_PASSWORD"
 
 fi
-
-echo "Ejecutando Mariadb!"
 
 exec su-exec mysql $@

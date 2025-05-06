@@ -44,8 +44,8 @@ services:
       - MYSQL_DATABASE
       - MARIADB_PORT
       - MYSQL_DATADIR
-    ports:
-      - "${MARIADB_PORT}:${MARIADB_PORT}"
+    expose:
+      - "${MARIADB_PORT}"
     volumes:
       - ${MDB_VOLUME}:/var/lib/mysql
     networks:
@@ -61,8 +61,8 @@ services:
         BASE_DIGEST:      ${BASE_DIGEST}
         WORDPRESS_PORT:   ${WORDPRESS_PORT}
         WORDPRESS_SCRIPT: ${SCRIPTS}
-    ports:
-      - "${WORDPRESS_PORT}:${WORDPRESS_PORT}"
+    expose:
+      - "${WORDPRESS_PORT}"
     volumes:
       - ${WP_VOLUME}:/var/www/html
     networks:
