@@ -43,7 +43,7 @@ EOF
 
 echo "Database Created!"
 
-mysql -u root p${MYSQL_ROOT_PASSWORD} < ${MYSQL_DATADIR}/init-db.sql
+mysql -u root -p"${MYSQL_ROOT_PASSWORD}" < ${MYSQL_DATADIR}/init-db.sql
 mysqladmin shutdown -u root -p"$MYSQL_ROOT_PASSWORD"
 
 fi
