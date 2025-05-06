@@ -28,23 +28,40 @@ while ! mysqladmin ping --silent; do
 done
 
 #CREATE DATABASE
-cat << EOF > /var/lib/mysql/init-db.sql
+
+db_password_file=/run/secrets/db_password
+db_root_password_file=/run/secrets/db_root_password
+
+
+if [ -f $db_password_file ] && [ -f $db_root_password_file ]; then
+
+db_password=$(cat $db_password_file)
+db_root_password=$(cat $db_root_password_file)
+
+cat << EOF > ${MYSQL_DATADIR}/init-db.sql
 CREATE DATABASE IF NOT EXISTS \`${MYSQL_DATABASE}\`;
 
-CREATE USER IF NOT EXISTS "${MYSQL_ROOT}"@"localhost" IDENTIFIED BY "${MYSQL_ROOT_PASSWORD}";
-ALTER USER 'root'@'localhost' IDENTIFIED BY "${MYSQL_ROOT_PASSWORD}";
+CREATE USER IF NOT EXISTS "${MYSQL_ROOT}"@"localhost" IDENTIFIED BY "$db_root_password";
+ALTER USER 'root'@'localhost' IDENTIFIED BY "$db_root_password";
 GRANT ALL PRIVILEGES ON \`${MYSQL_DATABASE}\`.* TO "${MYSQL_ROOT}"@"localhost" WITH GRANT OPTION;
 
-CREATE USER IF NOT EXISTS "${MYSQL_USER}"@"localhost" IDENTIFIED BY "${MYSQL_USER_PASSWORD}";
+CREATE USER IF NOT EXISTS "${MYSQL_USER}"@"localhost" IDENTIFIED BY "$db_password";
 GRANT ALL PRIVILEGES ON \`${MYSQL_DATABASE}\`.* TO "${MYSQL_USER}"@"localhost";
 
 FLUSH PRIVILEGES;
 EOF
 
+else
+
+echo "$db_password_file or $db_root_password_file not found..."
+exit 1
+
+fi
+
 echo "Database Created!"
 
-mysql -u root -p"${MYSQL_ROOT_PASSWORD}" < ${MYSQL_DATADIR}/init-db.sql
-mysqladmin shutdown -u root -p"$MYSQL_ROOT_PASSWORD"
+mysql -u root -p"$db_root_password" < ${MYSQL_DATADIR}/init-db.sql
+mysqladmin shutdown -u root -p"$db_root_password"
 
 fi
 

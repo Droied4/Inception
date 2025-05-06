@@ -1,11 +1,11 @@
 networks:
   app-network: {}
 
-#secrets:
- # MYSQL_USER_PASSWORD:
-  #  file: ${SECRETS}/db_user_password.txt
-  #MYSQL_ROOT_PASSWORD:
-   # file: ${SECRETS}/db_root_password.txt
+secrets:
+  db_password:
+    file: ${SECRETS}/db_user_password.txt
+  db_root_password:
+    file: ${SECRETS}/db_root_password.txt
   
 services:
   nginx:
@@ -42,15 +42,15 @@ services:
         MARIADB_PORT:     ${MARIADB_PORT}
         MARIADB_SCRIPT:   ${SCRIPTS}
         MARIADB_VERSION:  ${MARIADB_VERSION}
-   # secrets:
-    #  - MYSQL_USER_PASSWORD
-     # - MYSQL_ROOT_PASSWORD
+    secrets:
+      - db_password
+      - db_root_password
     environment:
       - MYSQL_DATABASE
       - MYSQL_USER
-      - MYSQL_USER_PASSWORD
+      - MYSQL_USER_PASSWORD_FILE=/run/secrets/db_password
       - MYSQL_ROOT
-      - MYSQL_ROOT_PASSWORD
+      - MYSQL_ROOT_PASSWORD_FILE=/run/secrets/db_root_password
       - MARIADB_PORT
       - MYSQL_DATADIR
     expose:
@@ -71,10 +71,12 @@ services:
         WORDPRESS_PORT:   ${WORDPRESS_PORT}
         WORDPRESS_SCRIPT: ${SCRIPTS}
         WP_VERSION:       ${WP_VERSION}
+    secrets:
+      - db_password
     environment:
       - WP_DB=${MYSQL_DATABASE}
       - WP_DB_USER=${MYSQL_USER}
-      - WP_DB_PASSWORD=${MYSQL_USER_PASSWORD}
+      - WP_DB_PASSWORD_FILE=/run/secrets/db_password
       - WP_HOST
       - WP_CHARSET
       - WP_PREFIX
