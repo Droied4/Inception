@@ -1,8 +1,16 @@
 <?php
 
+$db_password_file="/run/secrets/db_password";
+$db_password=file_get_contents($db_password_file);
+if (db_password === false)
+{
+	echo "file {$db_password_file} not found";
+	exit;
+}
+
 define( 'DB_NAME', "${WP_DB}" );
 define( 'DB_USER', "${WP_DB_USER}" );
-define( 'DB_PASSWORD', "${WP_DB_PASSWORD}" );
+define( 'DB_PASSWORD', "$db_password" );
 define( 'DB_HOST', "${WP_HOST}" );
 define( 'DB_CHARSET', "${WP_CHARSET}" );
 define( 'DB_COLLATE', '' );
