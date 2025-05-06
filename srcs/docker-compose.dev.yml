@@ -37,11 +37,11 @@ services:
         MARIADB_SCRIPT:   ${SCRIPTS}
         MARIADB_VERSION:  ${MARIADB_VERSION}
     environment:
+      - MYSQL_DATABASE
       - MYSQL_USER
       - MYSQL_USER_PASSWORD
       - MYSQL_ROOT
       - MYSQL_ROOT_PASSWORD
-      - MYSQL_DATABASE
       - MARIADB_PORT
       - MYSQL_DATADIR
     expose:
@@ -61,6 +61,15 @@ services:
         BASE_DIGEST:      ${BASE_DIGEST}
         WORDPRESS_PORT:   ${WORDPRESS_PORT}
         WORDPRESS_SCRIPT: ${SCRIPTS}
+        WP_VERSION:       ${WP_VERSION}
+    environment:
+      - WP_DB=${MYSQL_DATABASE}
+      - WP_DB_USER=${MYSQL_USER}
+      - WP_DB_PASSWORD=${MYSQL_USER_PASSWORD}
+      - WP_HOST
+      - WP_CHARSET
+      - WP_PREFIX
+      - WP_DEBUG
     expose:
       - "${WORDPRESS_PORT}"
     volumes:
