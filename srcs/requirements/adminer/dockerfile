@@ -1,0 +1,19 @@
+# syntax=docker/dockerfile:1
+ARG BASE_DIGEST
+FROM alpine@sha256:${BASE_DIGEST}
+
+ARG ADMINER_PORT
+ARG ADMINER_VERSION
+ARG ADMINE_SCRIPT
+ARG CURL_VERSION=8.12.1-r0
+
+RUN 	apk update && \
+	apk add --no-cache curl=${CURL_VERSION} && \
+	curl -L -o adminer.php https://github.com/vrana/adminer/releases/download/v${ADMINER_VERSION}/adminer-${ADMINER_VERSION}-mysql-en.php && \
+	chmod 644 /adminer.php 
+
+#COPY --chmod=744 ${ADMINER_SCRIPT}nginx_entrypoint.sh /entrypoint.sh
+
+#ENTRYPOINT ["/entrypoint.sh"]
+EXPOSE ${ADMINER_PORT}
+CMD ["tail", "-f", "/dev/null"]
