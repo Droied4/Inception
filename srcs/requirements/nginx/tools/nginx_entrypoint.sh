@@ -4,17 +4,16 @@ set -e
 
 add_group()
 {
-	function=add_group
 	group=$1
 	group_id=$2
 	user=$3
 	user_id=$4
 	dir=$5
 
-	if [ ! getent group "$group" ] && [ ! getent group "$group_id" ] > /dev/null 2>&1; then
-		addgroup -g $group_id -S $group; \
+	if  ! getent group "$group" > /dev/null 2>&1; then
+		addgroup -g $group_id -S $group; 
 	fi 
-	if [ ! getent passwd "$user"] && [ ! getent passwd "$user_id" ] > /dev/null 2>&1; then
+	if  ! getent passwd "$user" > /dev/null 2>&1; then
 		adduser -S -D -H -u $user_id -s /sbin/nologin -g $group $user;
 	fi
 	chown -R $user:$group $dir
