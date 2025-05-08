@@ -28,15 +28,17 @@ download_wp()
 
 add_group()
 {
-	group=www-data
-	user=www-data
+	group=$1
+	user=$2
+	dir=$3
+
 	if ! getent group "$group" > /dev/null 2>&1; then
-	addgroup -S www-data
+	addgroup -S $group
 	fi 
 	if ! getent passwd "$user" > /dev/null 2>&1; then
-	adduser -S -G www-data www-data
+	adduser -S -G $group $user
 	fi
-	chown -R www-data:www-data /var/www/html
+	chown -R $user:$group $dir
 }
 
 conf_php()
@@ -53,14 +55,14 @@ conf_php()
 	fi
 }
 
-init()
+init_wp()
 {
 	connection_loop "mariadb" "3306"
-	download_wp "/var/www/html"
-	add_group
-	conf_php "${PHP_VERSION}"
+	add_group	"www-data" "www-data" "/var/www/html"
+	download_wp 	"/var/www/html"
+	conf_php 	"${PHP_VERSION}"
 }
 
-init
+init_wp
 
 exec "$@" -F

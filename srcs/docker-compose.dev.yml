@@ -22,8 +22,7 @@ services:
       - NGINX_PORT
       - DOMAIN_NAME
       - NGINX_BDIR
-      - SSL_CERT
-      - SSL_CERT_KEY
+      - SSL_PATH
     ports:
       - "${NGINX_PORT}:${NGINX_PORT}"
     volumes:

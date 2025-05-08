@@ -8,7 +8,9 @@ ARG MARIADB_SCRIPT
 ARG SEXEC_VERSION=0.2-r3
 
 RUN 	apk update && \
-	apk add --no-cache mariadb=${MARIADB_VERSION} su-exec=${SEXEC_VERSION} mariadb-client=${MARIADB_VERSION}
+	apk add --no-cache mariadb=${MARIADB_VERSION} \
+		su-exec=${SEXEC_VERSION} \ 
+		mariadb-client=${MARIADB_VERSION}
 
 RUN	mkdir -p /run/mysqld /var/lib/mysql && \
 	chown -R mysql:mysql /var/lib/mysql /run/mysqld

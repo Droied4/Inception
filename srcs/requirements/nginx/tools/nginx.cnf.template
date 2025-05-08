@@ -85,8 +85,8 @@ http {
 	server {
     		listen			${NGINX_PORT} ssl;
   		server_name  		${DOMAIN_NAME};
-		ssl_certificate		${SSL_CERT};
-		ssl_certificate_key	${SSL_CERT_KEY};
+		ssl_certificate		${SSL_PATH}/${DOMAIN_NAME}.crt;
+		ssl_certificate_key	${SSL_PATH}/${DOMAIN_NAME}.key;
     		root         		${NGINX_BDIR};
 		index			index.php index.html;
 	

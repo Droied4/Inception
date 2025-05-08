@@ -16,4 +16,4 @@ COPY --chmod=744 ${NGINX_SCRIPT}nginx_entrypoint.sh /entrypoint.sh
 
 ENTRYPOINT ["/entrypoint.sh"]
 EXPOSE ${NGINX_PORT}
-CMD ["nginx"]
+CMD ["nginx", "-g", "daemon off;"]
