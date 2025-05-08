@@ -6,7 +6,7 @@ ARG WP_PORT
 ARG WP_SCRIPT
 ARG WP_CONF
 ARG WP_VERSION
-ARG PHP_VERSION=php82
+ARG PHP_VERSION
 ARG CURL_VERSION=8.12.1-r0
 
 RUN	apk update && \
@@ -14,25 +14,9 @@ RUN	apk update && \
 		curl=${CURL_VERSION} \
 		${PHP_VERSION} \
 		${PHP_VERSION}-fpm \ 
-		${PHP_VERSION}-mysqli \
-		php82-session \ 
-		php82-opcache \
-		php82-gd \
-		php82-json \
-		php82-mbstring \
-		php82-curl \ 
-		php82-dom \
-		php82-xml \
-		php82-bcmath \
-		php82-exif \
-		php82-intl \
-		php82-zip && \
-		curl -O https://wordpress.org/wordpress-${WP_VERSION}.tar.gz && \
-		tar -xzvf wordpress-${WP_VERSION}.tar.gz && \
-		rm wordpress-${WP_VERSION}.tar.gz && \
-		sed -i 's/^listen = 127\.0\.0\.1:9000/listen = 0.0.0.0:9000/' /etc/php82/php-fpm.d/www.conf 
+		${PHP_VERSION}-mysqli 
 
-COPY	--chmod=644 ${WP_CONF}wp-config.php /wordpress/
+COPY	--chmod=644 ${WP_CONF}wp-config.php /
 COPY	--chmod=755 ${WP_SCRIPT}wp_entrypoint.sh /entrypoint.sh
 
 ENTRYPOINT ["/entrypoint.sh"]

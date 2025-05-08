@@ -72,6 +72,7 @@ services:
         WP_SCRIPT:        ${SCRIPTS}
         WP_CONF:          ${CONF}
         WP_VERSION:       ${WP_VERSION}
+        PHP_VERSION:      ${PHP_VERSION}
     secrets:
       - db_password
     environment:
@@ -83,6 +84,7 @@ services:
       - WP_PREFIX
       - WP_DEBUG
       - WP_VERSION
+      - PHP_VERSION
     expose:
       - "${WORDPRESS_PORT}"
     volumes:
