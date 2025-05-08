@@ -33,8 +33,9 @@ all: up
 up:
 	@$(COMPOSE) $(COMPOSE_PATH) $@ --build -d
 
-env:
+setup:
 	cp ${ENV_SAMPLE} srcs/.env
+	mkdir secrets
 
 it:
 	@$(DOCKER) exec -it $(ID) sh
@@ -58,4 +59,4 @@ ps:
 images:
 	@$(DOCKER) $@
 
-.PHONY: all up it clean fclean logs ps images
+.PHONY: all up setup it clean fclean logs ps images
