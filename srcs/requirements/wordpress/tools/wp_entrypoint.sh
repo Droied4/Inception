@@ -29,22 +29,24 @@ download_wp()
 add_group()
 {
 	group=$1
-	user=$2
-	dir=$3
+	group_id=$2
+	user=$3
+	user_id=$4
+	dir=$5
 
 	if ! getent group "$group" > /dev/null 2>&1; then
-	addgroup -S $group
+		addgroup -g $group_id -S $group;
 	fi 
 	if ! getent passwd "$user" > /dev/null 2>&1; then
-	adduser -S -G $group $user
+		adduser -S -D -H -u $user_id -s /sbin/nologin -g $group $user;
 	fi
 	chown -R $user:$group $dir
 }
 
 conf_php()
 {
-	php_version=$1
-	conf_file=/etc/$1/php-fpm.d/www.conf
+	php_version=php$1
+	conf_file=/etc/$php_version/php-fpm.d/www.conf
 	sed -i 's/^listen = 127\.0\.0\.1:9000/listen = 0.0.0.0:9000/' $conf_file
 	sed -i 's/^user = nobody/user = www-data/' $conf_file
 	sed -i 's/^group = nobody/group = www-data/' $conf_file
@@ -58,11 +60,14 @@ conf_php()
 init_wp()
 {
 	connection_loop "mariadb" "3306"
-	add_group	"www-data" "www-data" "/var/www/html"
+	add_group	"www-data" "33" "www-data" "33" "/var/www/html"
 	download_wp 	"/var/www/html"
 	conf_php 	"${PHP_VERSION}"
+	exec php-fpm${PHP_VERSION} -F
 }
 
-init_wp
-
-exec "$@" -F
+if [ "$1" = "php" ]; then
+	init_wp
+else
+	exec "$@"
+fi

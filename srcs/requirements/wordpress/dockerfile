@@ -12,14 +12,13 @@ ARG CURL_VERSION=8.12.1-r0
 RUN	apk update && \
 	apk add --no-cache \
 		curl=${CURL_VERSION} \
-		${PHP_VERSION} \
-		${PHP_VERSION}-fpm \ 
-		${PHP_VERSION}-mysqli 
+		php${PHP_VERSION} \
+		php${PHP_VERSION}-fpm \ 
+		php${PHP_VERSION}-mysqli 
 
 COPY	--chmod=644 ${WP_CONF}wp-config.php /
 COPY	--chmod=755 ${WP_SCRIPT}wp_entrypoint.sh /entrypoint.sh
 
 ENTRYPOINT ["/entrypoint.sh"]
 EXPOSE ${WP_PORT}
-CMD ["php-fpm82"]
-#CMD ["sh", "-c", "while true; do sleep 60; done"]
+CMD ["php"]
