@@ -107,8 +107,11 @@ init_mdb()
 	add_group "mysql" "111" "mysql" "111" "/var/lib/mysql"
 	mysql_config_file
 	start_database 
+	exec su-exec mysql $@
 }
 
-init_mdb
-
-exec su-exec mysql $@
+if [ "$1" = "mysqld" ]; then
+	init_mdb "$@"
+else
+	exec "$@"
+fi
