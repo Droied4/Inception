@@ -70,8 +70,10 @@ services:
         ADMINER_PORT:     ${ADMINER_PORT}
         ADMINER_SCRIPT:   ${SCRIPTS}
         ADMINER_VERSION:  ${ADMINER_VERSION}
+        PHP_VERSION:      ${PHP_VERSION}
     environment:
       - ADMINER_VERSION
+      - PHP_VERSION
     expose:
       - "${ADMINER_PORT}"
     volumes:

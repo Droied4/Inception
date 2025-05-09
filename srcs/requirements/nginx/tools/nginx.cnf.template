@@ -93,7 +93,7 @@ http {
 		location / {
         	try_files $uri $uri/ /index.php?$args;
    		}
-
+		
 		location ~ \.php$ {
        	 	fastcgi_pass wordpress:9000;
        	 	fastcgi_index index.php;
@@ -101,5 +101,12 @@ http {
         	include fastcgi_params;
     		}
 
+		 location /adminer {
+        	root ${NGINX_BDIR};  
+        	fastcgi_pass adminer:8080;
+        	fastcgi_index adminer.php;
+        	include fastcgi_params;
+        	fastcgi_param SCRIPT_FILENAME ${NGINX_BDIR}/adminer.php;
+    		}
 	}	
 }

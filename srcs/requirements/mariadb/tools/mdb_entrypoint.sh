@@ -86,16 +86,14 @@ EOF
 add_group()
 {
 	group=$1
-	group_id=$2
-	user=$3
-	user_id=$4
-	dir=$5
+	user=$2
+	dir=$3
 
 	if  ! getent group "$group" > /dev/null 2>&1; then
-		addgroup -g $group_id -S $group; 
+		addgroup -S $group; 
 	fi 
 	if  ! getent passwd "$user" > /dev/null 2>&1; then
-		adduser -S -D -H -u $user_id -s /sbin/nologin -g $group $user;
+		adduser -S -D -H -s /sbin/nologin -g $group $user;
 	fi
 	chown -R $user:$group $dir
 	
@@ -104,7 +102,7 @@ add_group()
 
 init_mdb()
 {
-	add_group "mysql" "111" "mysql" "111" "/var/lib/mysql"
+	add_group "mysql" "mysql" "/var/lib/mysql"
 	mysql_config_file
 	start_database 
 	exec su-exec mysql $@

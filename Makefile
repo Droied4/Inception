@@ -51,7 +51,7 @@ fclean: clean images
 	@printf "$(GREEN)COMPLETE! $(NC)\n"
 
 logs:
-	@$(COMPOSE) $(COMPOSE_PATH) $@
+	@$(COMPOSE) $(COMPOSE_PATH) $@ $(ID)
 
 ps:
 	@$(COMPOSE) $(COMPOSE_PATH) $@ -a

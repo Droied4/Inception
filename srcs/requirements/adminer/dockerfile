@@ -5,10 +5,17 @@ FROM alpine@sha256:${BASE_DIGEST}
 ARG ADMINER_PORT
 ARG ADMINER_VERSION
 ARG ADMINER_SCRIPT
+ARG PHP_VERSION
 ARG CURL_VERSION=8.12.1-r0
 
 RUN 	apk update && \
-	apk add --no-cache curl=${CURL_VERSION} && \
+	apk add --no-cache curl=${CURL_VERSION} \
+		php${PHP_VERSION} \
+		php${PHP_VERSION}-fpm \
+		php${PHP_VERSION}-mysqli \
+		php${PHP_VERSION}-pdo_pgsql \
+		php${PHP_VERSION}-json \
+		php${PHP_VERSION}-session && \
 	curl -L -o adminer.php https://github.com/vrana/adminer/releases/download/v${ADMINER_VERSION}/adminer-${ADMINER_VERSION}-mysql-en.php && \
 	chmod 644 /adminer.php 
 
@@ -16,4 +23,4 @@ COPY --chmod=744 ${ADMINER_SCRIPT}adminer_entrypoint.sh /entrypoint.sh
 
 ENTRYPOINT ["/entrypoint.sh"]
 EXPOSE ${ADMINER_PORT}
-CMD ["tail", "-f", "/dev/null"]
+CMD ["php"]
