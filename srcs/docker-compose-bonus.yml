@@ -60,6 +60,26 @@ services:
       - ${NETWORK}
     restart: unless-stopped
 
+  adminer:
+    container_name: adminer
+    build:
+      context:
+        ${ADMINER_PATH}
+      args:
+        BASE_DIGEST:      ${BASE_DIGEST}
+        ADMINER_PORT:     ${ADMINER_PORT}
+        ADMINER_SCRIPT:   ${SCRIPTS}
+        ADMINER_VERSION:  ${ADMINER_VERSION}
+    environment:
+      - ADMINER_VERSION
+    expose:
+      - "${ADMINER_PORT}"
+    volumes:
+      - ${WP_VOLUME}:/var/www/html
+    networks:
+      - ${NETWORK}
+    restart: unless-stopped
+
   wordpress:
     container_name: wordpress
     build:

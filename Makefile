@@ -8,7 +8,7 @@ COMPOSE = $(DOCKER) compose
 #                               SOURCES                                        #
 # ╚══════════════════════════════════════════════════════════════════════════╝ # 
 
-COMPOSE_PATH = -f ./srcs/docker-compose.yml
+COMPOSE_PATH = -f ./srcs/docker-compose-bonus.yml
 ENV_SAMPLE= ./srcs/.env.sample
 
 
