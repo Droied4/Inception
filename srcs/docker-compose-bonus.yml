@@ -43,8 +43,10 @@ services:
         VSFTPD_VERSION:   ${VSFTPD_VERSION}
     environment:
       - VSFTPD_VERSION
-    expose:
-      - "{VSFPTD_PORT}"
+    ports:
+      - "${VSFTPD_PORT}:${VSFTPD_PORT}"
+    #expose:
+     # - "${VSFTPD_PORT}"
     volumes:
       - ${WP_VOLUME}:/var/www/html
     networks:

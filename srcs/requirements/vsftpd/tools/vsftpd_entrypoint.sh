@@ -29,6 +29,11 @@ config_ftpserver()
 {
 	conf_file=/etc/vsftpd/vsftpd.conf
 	if [ -f $conf_file ]; then
+		echo "seccomp_sandbox=NO" >> $conf_file
+		echo "xferlog_enable=YES" >> $conf_file
+		echo "xferlog_file=/var/log/vsftpd.log" >> $conf_file
+		echo "log_ftp_protocol=YES" >> $conf_file
+		echo "allow_writeable_chroot=YES" >> $conf_file
 		sed -i 's/#write_enable=YES/write_enable=YES/1' $conf_file	
 		sed -i 's/#local_enable=YES/local_enable=YES/1' $conf_file	
 		echo "VsFTPd Configured!"

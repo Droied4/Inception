@@ -15,9 +15,7 @@ RUN 	apk update && \
 		php${PHP_VERSION}-mysqli \
 		php${PHP_VERSION}-pdo_pgsql \
 		php${PHP_VERSION}-json \
-		php${PHP_VERSION}-session && \
-	curl -L -o adminer.php https://github.com/vrana/adminer/releases/download/v${ADMINER_VERSION}/adminer-${ADMINER_VERSION}-mysql-en.php && \
-	chmod 644 /adminer.php 
+		php${PHP_VERSION}-session 
 
 COPY --chmod=744 ${ADMINER_SCRIPT}adminer_entrypoint.sh /entrypoint.sh
 
