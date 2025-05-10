@@ -40,10 +40,10 @@ setup:
 it:
 	@$(DOCKER) exec -it $(ID) sh
 
-clean:
-	@$(COMPOSE) $(COMPOSE_PATH) down
+down:
+	@$(COMPOSE) $(COMPOSE_PATH) $@
 
-fclean: clean images
+fclean: down images
 	@echo
 	@printf "$(RED)Removing images above$(NC)\n"
 	@$(DOCKER) container prune -f && $(DOCKER) image prune -a -f
@@ -59,4 +59,4 @@ ps:
 images:
 	@$(DOCKER) $@
 
-.PHONY: all up setup it clean fclean logs ps images
+.PHONY: all up setup it clean down logs ps images

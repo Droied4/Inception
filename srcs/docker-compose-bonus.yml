@@ -45,13 +45,18 @@ services:
       - VSFTPD_VERSION
       - VSFTPD_DATA_PORT
       - VSFTPD_PORT
+      - VSFTPD_USER
+      - VSFTPD_PASS
     ports:
       - "${VSFTPD_PORT}:${VSFTPD_PORT}"
-    expose:
-      - "${VSFTPD_PORT}"
-      - "${VSFTPD_DATA_PORT}"
+      - "20:20"
+      - "40000-40005:40000-40005"
+    # expose:
+    #   - "${VSFTPD_PORT}"
+    #   - "${VSFTPD_DATA_PORT}"
+    #   - "40000-40005:40000-40005"
     volumes:
-      - ${WP_VOLUME}:/var/www/html
+      - ${WP_VOLUME}:/home/${VSFTPD_USER}/ftp/files
     networks:
       - ${NETWORK}
     restart: unless-stopped
