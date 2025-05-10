@@ -26,9 +26,9 @@ local_enable=YES
 write_enable=YES
 
 #####------PASSIVE MODE CONFIG
-pasv_enable=YES
-pasv_min_port=1024
-pasv_max_port=1048
+pasv_enable=NO
+pasv_min_port=40000
+pasv_max_port=50000
 
 #####------ANONYMOUS CONFIG
 # Allow anonymous FTP? (Beware - allowed by default if you comment this out).
@@ -78,6 +78,7 @@ port_enable=YES
 connect_from_port_20=YES
 ftp_data_port=${VSFTPD_DATA_PORT}
 listen_port=${VSFTPD_PORT}
+listen_address=0.0.0.0
 
 #####------OTHER CONFIG
 # Hide ids from user. Default=NO
@@ -85,6 +86,5 @@ hide_ids=NO
 # Activate directory messages - messages given to remote users when they
 # go into a certain directory.
 dirmessage_enable=YES
-
 
 #------------------------------------#
