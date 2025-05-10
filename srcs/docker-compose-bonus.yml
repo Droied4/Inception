@@ -30,32 +30,23 @@ services:
     networks:
       - ${NETWORK}
     restart: unless-stopped
-
-  mariadb:
-    container_name: mariadb
+  
+  vsftpd:
+    container_name: vsftpd
     build:
       context:
-        ${MARIADB_PATH}
+        ${VSFTPD_PATH}
       args:
         BASE_DIGEST:      ${BASE_DIGEST}
-        MARIADB_PORT:     ${MARIADB_PORT}
-        MARIADB_SCRIPT:   ${SCRIPTS}
-        MARIADB_VERSION:  ${MARIADB_VERSION}
-    secrets:
-      - db_password
-      - db_root_password
+        VSFTPD_PORT:      ${VSFTPD_PORT}
+        VSFTPD_SCRIPT:    ${SCRIPTS}
+        VSFTPD_VERSION:   ${VSFTPD_VERSION}
     environment:
-      - MYSQL_DATABASE
-      - MYSQL_USER
-      - MYSQL_USER_PASSWORD_FILE=/run/secrets/db_password
-      - MYSQL_ROOT
-      - MYSQL_ROOT_PASSWORD_FILE=/run/secrets/db_root_password
-      - MARIADB_PORT
-      - MYSQL_DATADIR
+      - VSFTPD_VERSION
     expose:
-      - "${MARIADB_PORT}"
+      - "{VSFPTD_PORT}"
     volumes:
-      - ${MDB_VOLUME}:/var/lib/mysql
+      - ${WP_VOLUME}:/var/www/html
     networks:
       - ${NETWORK}
     restart: unless-stopped
@@ -114,4 +105,33 @@ services:
       - ${NETWORK}
     depends_on:
       - mariadb
+    restart: unless-stopped
+
+  mariadb:
+    container_name: mariadb
+    build:
+      context:
+        ${MARIADB_PATH}
+      args:
+        BASE_DIGEST:      ${BASE_DIGEST}
+        MARIADB_PORT:     ${MARIADB_PORT}
+        MARIADB_SCRIPT:   ${SCRIPTS}
+        MARIADB_VERSION:  ${MARIADB_VERSION}
+    secrets:
+      - db_password
+      - db_root_password
+    environment:
+      - MYSQL_DATABASE
+      - MYSQL_USER
+      - MYSQL_USER_PASSWORD_FILE=/run/secrets/db_password
+      - MYSQL_ROOT
+      - MYSQL_ROOT_PASSWORD_FILE=/run/secrets/db_root_password
+      - MARIADB_PORT
+      - MYSQL_DATADIR
+    expose:
+      - "${MARIADB_PORT}"
+    volumes:
+      - ${MDB_VOLUME}:/var/lib/mysql
+    networks:
+      - ${NETWORK}
     restart: unless-stopped

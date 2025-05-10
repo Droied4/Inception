@@ -1,0 +1,16 @@
+# syntax=docker/dockerfile:1
+ARG BASE_DIGEST
+FROM alpine@sha256:${BASE_DIGEST}
+
+ARG VSFTPD_PORT
+ARG VSFTPD_VERSION
+ARG VSFTPD_SCRIPT
+
+RUN 	apk update && \
+	apk add --no-cache vsftpd=${VSFTPD_VERSION} 
+
+COPY --chmod=744 ${VSFTPD_SCRIPT}vsftpd_entrypoint.sh /entrypoint.sh
+
+ENTRYPOINT ["/entrypoint.sh"]
+EXPOSE ${VSFTPD_PORT}
+CMD ["vsftpd"]
