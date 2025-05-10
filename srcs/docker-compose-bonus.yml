@@ -43,10 +43,13 @@ services:
         VSFTPD_VERSION:   ${VSFTPD_VERSION}
     environment:
       - VSFTPD_VERSION
+      - VSFTPD_DATA_PORT
+      - VSFTPD_PORT
     ports:
       - "${VSFTPD_PORT}:${VSFTPD_PORT}"
-    #expose:
-     # - "${VSFTPD_PORT}"
+    expose:
+      - "${VSFTPD_PORT}"
+      - "${VSFTPD_DATA_PORT}"
     volumes:
       - ${WP_VOLUME}:/var/www/html
     networks:
@@ -73,6 +76,20 @@ services:
       - ${WP_VOLUME}:/var/www/html
     networks:
       - ${NETWORK}
+    restart: unless-stopped
+
+  filezilla:
+    image: lscr.io/linuxserver/filezilla:latest
+    container_name: filezilla
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Etc/UTC
+    volumes:
+      - ${WP_VOLUME}:/www/var/html
+    ports:
+      - 3000:3000
+      - 3001:3001
     restart: unless-stopped
 
   wordpress:

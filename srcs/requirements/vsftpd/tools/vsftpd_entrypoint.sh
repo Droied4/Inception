@@ -25,29 +25,20 @@ add_group()
 	fi
 }
 
-config_ftpserver()
+start_templates()
 {
-	conf_file=/etc/vsftpd/vsftpd.conf
-	if [ -f $conf_file ]; then
-		echo "seccomp_sandbox=NO" >> $conf_file
-		echo "xferlog_enable=YES" >> $conf_file
-		echo "xferlog_file=/var/log/vsftpd.log" >> $conf_file
-		echo "log_ftp_protocol=YES" >> $conf_file
-		echo "allow_writeable_chroot=YES" >> $conf_file
-		sed -i 's/#write_enable=YES/write_enable=YES/1' $conf_file	
-		sed -i 's/#local_enable=YES/local_enable=YES/1' $conf_file	
-		echo "VsFTPd Configured!"
-	else
-		echo "$con_file Not found"
-	fi
-	
+	template=$1
+	dir=$2
+	echo "Applying templates configuration"
+	envsubst '${VSFTPD_PORT} ${VSFTPD_DATA_PORT}' < $template > $dir
+	echo "Configuration Complete! Starting VsFTPd Server..."
 }
 
 init_vsftpd()
 {
-	add_group "vsftpd" "vsftpd" "/var/www/html"
-	config_ftpserver
-	exec "/usr/sbin/$@"
+	add_group "ftp" "ftp" "/var/www/html"
+	start_templates "/vsftpd.cnf.template" "/etc/vsftpd/vsftpd.conf"
+	exec "/usr/sbin/$@" /etc/vsftpd/vsftpd.conf
 }
 
 if [ "$1" = "vsftpd" ]; then

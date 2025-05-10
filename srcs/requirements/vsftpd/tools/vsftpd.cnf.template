@@ -1,0 +1,90 @@
+# My Own vsftpd template Configuration - Droied4 
+# Ref. Page 
+# https://linux.die.net/man/5/vsftpd.conf
+
+#####------GLOBAL CONFIG
+# You may fully customise the login banner string:
+ftpd_banner=Welcome to my FTP service.
+
+# When "listen" directive is enabled, vsftpd runs in standalone mode and
+# listens on IPv4 sockets. This directive cannot be used in conjunction
+# with the listen_ipv6 directive.
+listen=YES
+
+# This directive enables listening on IPv6 sockets. To listen on IPv4 and IPv6
+# sockets, you must run two copies of vsftpd with two configuration files.
+# Make sure, that one of the listen options is commented !!
+#listen_ipv6=YES
+
+# Disable Daemon Mode. Default: background=YES
+background=NO
+
+# Uncomment this to allow local users to log in.
+local_enable=YES
+
+# Uncomment this to enable any form of FTP write command.
+write_enable=YES
+
+#####------PASSIVE MODE CONFIG
+pasv_enable=YES
+pasv_min_port=1024
+pasv_max_port=1048
+
+#####------ANONYMOUS CONFIG
+# Allow anonymous FTP? (Beware - allowed by default if you comment this out).
+anonymous_enable=YES
+# When enabled, this prevents vsftpd from asking for an anonymous password - 
+# the anonymous user will log straight in. 
+no_anon_password=YES
+# This option represents a directory which vsftpd will try to change into after 
+# an anonymous login. Failure is silently ignored.
+anon_root=/var/www/html
+# If set to YES, anonymous users will be permitted to upload files under certain 
+# conditions. For this to work, the option write_enable must be activated, and the 
+# anonymous ftp user must have write permission on desired upload locations. This setting 
+# is also required for virtual users to upload; by default, virtual users are treated with 
+# anonymous (i.e. maximally restricted) privilege. 
+anon_upload_enable=YES
+# If set to YES, anonymous users will be permitted to create new directories under certain 
+# conditions. For this to work, the option write_enable must be activated, and the anonymous 
+# ftp user must have write permission on the parent directory. 
+anon_mkdir_write_enable=YES
+
+#####------GUEST CONFIG
+#If enabled, all non-anonymous logins are classed as "guest" logins. A guest 
+#login is remapped to the user specified in the guest_username setting. 
+# Enable virtual users. Default: guest_enable=NO
+guest_enable=NO
+
+#####------CHROOT CONFG
+# You may specify an explicit list of local users to chroot() to their home
+# directory. If chroot_local_user is YES, then this list becomes a list of
+# users to NOT chroot().
+chroot_local_user=NO
+
+# Workaround chroot check.
+# See https://www.benscobie.com/fixing-500-oops-vsftpd-refusing-to-run-with-writable-root-inside-chroot/
+# and http://serverfault.com/questions/362619/why-is-the-chroot-local-user-of-vsftpd-insecure
+allow_writeable_chroot=YES
+
+#####------LOGS CONFIG
+# Enable logging
+xferlog_enable=YES
+xferlog_file=/var/log/vsftpd/vsftpd.log
+
+#####------PORTS CONFIG
+# Enable active mode
+port_enable=YES
+connect_from_port_20=YES
+ftp_data_port=${VSFTPD_DATA_PORT}
+listen_port=${VSFTPD_PORT}
+
+#####------OTHER CONFIG
+# Hide ids from user. Default=NO
+hide_ids=NO
+# Activate directory messages - messages given to remote users when they
+# go into a certain directory.
+dirmessage_enable=YES
+
+
+#------------------------------------#

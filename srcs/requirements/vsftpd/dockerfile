@@ -5,10 +5,14 @@ FROM alpine@sha256:${BASE_DIGEST}
 ARG VSFTPD_PORT
 ARG VSFTPD_VERSION
 ARG VSFTPD_SCRIPT
+ARG GTXT_VERSION=0.22.5-r0
 
 RUN 	apk update && \
-	apk add --no-cache vsftpd=${VSFTPD_VERSION} 
+	apk add --no-cache vsftpd=${VSFTPD_VERSION} \
+	gettext=${GTXT_VERSION}
 
+
+COPY --chmod=644 ${VSFTPD_SCRIPT}vsftpd.cnf.template /
 COPY --chmod=744 ${VSFTPD_SCRIPT}vsftpd_entrypoint.sh /entrypoint.sh
 
 ENTRYPOINT ["/entrypoint.sh"]
