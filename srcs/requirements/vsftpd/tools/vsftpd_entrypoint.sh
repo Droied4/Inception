@@ -1,4 +1,4 @@
-#!/bin/sh 
+#!/bin/bash 
 
 set -e
 
@@ -8,17 +8,19 @@ configure_user()
 	group=$2
 	password=$3
 	
-	if ! getent group "$group" > /dev/null 2>&1; then
-		echo "Add group $group"
-		addgroup -S "$group";
-	fi
-	if ! getent passwd "$user" > /dev/null 2>&1; then
-		echo "Add user $user"
-		adduser -S -D -G "$group" "$user";
-	fi
+	adduser sammy --disabled-password
+	#for alpine users
+	# if ! getent group "$group" > /dev/null 2>&1; then
+	# 	echo "Add group $group"
+	# 	addgroup -S "$group";
+	# fi
+	# if ! getent passwd "$user" > /dev/null 2>&1; then
+	# 	echo "Add user $user"
+	# 	adduser -S -D -G "$group" "$user";
+	# fi
 
  	echo "$user:$password" | /usr/sbin/chpasswd
- 	echo "$user" >> /etc/vsftpd/vsftpd.userlist
+ 	echo "$user" >> /etc/vsftpd.userlist
 }
 
 configure_folder()
@@ -45,32 +47,17 @@ start_templates()
 	echo "Configuration Complete! Starting VsFTPd Server..."
 }
 
-crazy()
-{
-	sed -i "s/#write_enable=YES/write_enable=YES/1"   /etc/vsftpd/vsftpd.conf
-sed -i "s/#chroot_local_user=YES/chroot_local_user=YES/1"   /etc/vsftpd/vsftpd.conf
-
-echo "
-local_enable=YES
-allow_writeable_chroot=YES
-pasv_enable=YES
-local_root=/home/$VSFTPD_USER/ftp
-pasv_min_port=40000
-pasv_max_port=40005
-userlist_file=/etc/vsftpd/vsftpd.userlist" >> /etc/vsftpd/vsftpd.conf
-}
-
 init_vsftpd()
 {
-
 	mkdir -p /var/run/vsftpd/empty
 	chmod 755 /var/run/vsftpd/empty
 	configure_user "$VSFTPD_USER" "$VSFTPD_USER" "$VSFTPD_PASS"
 	configure_folder "$VSFTPD_USER"
-	crazy
-#	start_templates "/vsftpd.cnf.template" "/etc/vsftpd/vsftpd.conf"
-	exec "/usr/sbin/$@" /etc/vsftpd/vsftpd.conf
+	start_templates "/vsftpd.cnf.template" "/etc/vsftpd.conf"
+	/usr/sbin/vsftpd /etc/vsftpd.conf
 }
+
+init_vsftpd $@
 
 if [ "$1" = "vsftpd" ]; then
 	init_vsftpd $@

@@ -22,7 +22,8 @@ background=NO
 # Uncomment this to allow local users to log in.
 local_enable=YES
 local_root=/home/${VSFTPD_USER}/ftp
-userlist_file=/etc/vsftpd/vsftpd.userlist
+userlist_file=/etc/vsftpd.userlist
+userlist_deny=NO
 
 # Uncomment this to enable any form of FTP write command.
 write_enable=YES
@@ -46,11 +47,11 @@ no_anon_password=NO
 # anonymous ftp user must have write permission on desired upload locations. This setting 
 # is also required for virtual users to upload; by default, virtual users are treated with 
 # anonymous (i.e. maximally restricted) privilege. 
-anon_upload_enable=YES
+anon_upload_enable=NO
 # If set to YES, anonymous users will be permitted to create new directories under certain 
 # conditions. For this to work, the option write_enable must be activated, and the anonymous 
 # ftp user must have write permission on the parent directory. 
-anon_mkdir_write_enable=YES
+anon_mkdir_write_enable=NO
 
 #####------GUEST CONFIG
 #If enabled, all non-anonymous logins are classed as "guest" logins. A guest 
@@ -71,7 +72,9 @@ chroot_list_enable=NO
 
 # The option is the name of a file containing a list of local users which will be placed in a chroot() 
 # jail in their home directory. This option is only relevant if the option chroot_list_enable is enabled.
-#chroot_list_file=/etc/vsftpd/vsftpd.userlist
+#chroot_list_file=/etc/vsftpd.userlist
+
+#secure_chroot_dir=/var/run/vsftpd/empty
 
 # Workaround chroot check.
 # See https://www.benscobie.com/fixing-500-oops-vsftpd-refusing-to-run-with-writable-root-inside-chroot/
@@ -81,7 +84,7 @@ allow_writeable_chroot=YES
 #####------LOGS CONFIG
 # Enable logging
 xferlog_enable=YES
-xferlog_file=/var/log/vsftpd/vsftpd.log
+xferlog_file=/var/log/vsftpd.log
 
 #####------PORTS CONFIG
 # Enable active mode
@@ -97,5 +100,7 @@ hide_ids=NO
 # Activate directory messages - messages given to remote users when they
 # go into a certain directory.
 dirmessage_enable=YES
+# This string is the name of the PAM service vsftpd will use.
+pam_service_name=vsftpd
 
 #------------------------------------#
