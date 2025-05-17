@@ -1,0 +1,16 @@
+# syntax=docker/dockerfile:1
+ARG BASE_DIGEST
+FROM alpine@sha256:${BASE_DIGEST}
+
+ARG REDIS_PORT
+ARG REDIS_VERSION
+ARG REDIS_SCRIPT
+
+RUN 	apk update && \
+	apk add --no-cache redis=${REDIS_VERSION}
+
+COPY --chmod=744 ${REDIS_SCRIPT}redis_entrypoint.sh /entrypoint.sh
+
+ENTRYPOINT ["/entrypoint.sh"]
+EXPOSE ${REDIS_PORT}
+CMD ["redis-server"]
