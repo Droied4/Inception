@@ -1,13 +1,20 @@
-FROM debian:bullseye
+# syntax=docker/dockerfile:1
+ARG BASE_DIGEST
+FROM alpine@sha256:${BASE_DIGEST}
 
+ARG VSFTPD_PORT
+ARG VSFTPD_VERSION
+ARG VSFTPD_SCRIPT
+ARG GTXT_VERSION=0.22.5-r0
 
-RUN apt update -y
+RUN 	apk update && \
+	apk add --no-cache vsftpd=${VSFTPD_VERSION} \
+	gettext=${GTXT_VERSION} \
+	shadow 
 
-RUN apt install vsftpd -y
-RUN apt install gettext -y
+COPY --chmod=644 ${VSFTPD_SCRIPT}vsftpd.cnf.template /
+COPY --chmod=744 ${VSFTPD_SCRIPT}vsftpd_entrypoint.sh /entrypoint.sh
 
-#COPY --chmod=744 ./tools/script.sh /
-COPY --chmod=744 ./tools/vsftpd.cnf.template /
-COPY --chmod=744 ./tools/vsftpd_entrypoint.sh /script.sh
-
-CMD ["/script.sh"]
+ENTRYPOINT ["sh", "/entrypoint.sh"]
+EXPOSE ${VSFTPD_PORT}
+CMD ["vsftpd"]

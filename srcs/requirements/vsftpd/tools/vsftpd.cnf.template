@@ -9,12 +9,12 @@ ftpd_banner=Welcome to my FTP service.
 # When "listen" directive is enabled, vsftpd runs in standalone mode and
 # listens on IPv4 sockets. This directive cannot be used in conjunction
 # with the listen_ipv6 directive.
-listen=NO
+listen=YES
 
 # This directive enables listening on IPv6 sockets. To listen on IPv4 and IPv6
 # sockets, you must run two copies of vsftpd with two configuration files.
 # Make sure, that one of the listen options is commented !!
-listen_ipv6=YES
+listen_ipv6=NO
 
 # Disable Daemon Mode. Default: background=YES
 background=NO
@@ -22,16 +22,17 @@ background=NO
 # Uncomment this to allow local users to log in.
 local_enable=YES
 local_root=/home/${VSFTPD_USER}/ftp
-userlist_file=/etc/vsftpd.userlist
 userlist_deny=NO
+userlist_enable=YES
+userlist_file=/etc/vsftpd/vsftpd.userlist
 
 # Uncomment this to enable any form of FTP write command.
 write_enable=YES
 
 #####------PASSIVE MODE CONFIG
 pasv_enable=YES
-pasv_min_port=40000
-pasv_max_port=40005
+pasv_min_port=5000
+pasv_max_port=5010
 
 #####------ANONYMOUS CONFIG
 # Allow anonymous FTP? (Beware - allowed by default if you comment this out).
@@ -84,7 +85,7 @@ allow_writeable_chroot=YES
 #####------LOGS CONFIG
 # Enable logging
 xferlog_enable=YES
-xferlog_file=/var/log/vsftpd.log
+xferlog_file=/var/log/vsftpd/vsftpd.log
 
 #####------PORTS CONFIG
 # Enable active mode
@@ -102,5 +103,7 @@ hide_ids=NO
 dirmessage_enable=YES
 # This string is the name of the PAM service vsftpd will use.
 pam_service_name=vsftpd
+
+seccomp_sandbox=NO
 
 #------------------------------------#

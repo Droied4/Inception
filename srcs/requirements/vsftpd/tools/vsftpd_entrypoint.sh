@@ -1,4 +1,4 @@
-#!/bin/bash 
+#!/bin/sh 
 
 set -e
 
@@ -8,7 +8,7 @@ configure_user()
 	group=$2
 	password=$3
 	
-	adduser sammy --disabled-password
+	adduser --disabled-password "$user"
 	#for alpine users
 	# if ! getent group "$group" > /dev/null 2>&1; then
 	# 	echo "Add group $group"
@@ -49,12 +49,23 @@ start_templates()
 
 init_vsftpd()
 {
-	mkdir -p /var/run/vsftpd/empty
-	chmod 755 /var/run/vsftpd/empty
-	configure_user "$VSFTPD_USER" "$VSFTPD_USER" "$VSFTPD_PASS"
-	configure_folder "$VSFTPD_USER"
-	start_templates "/vsftpd.cnf.template" "/etc/vsftpd.conf"
-	/usr/sbin/vsftpd /etc/vsftpd.conf
+	#mkdir -p /var/run/vsftpd/empty
+	#chmod 755 /var/run/vsftpd/empty
+	#configure_user "$VSFTPD_USER" "$VSFTPD_USER" "$VSFTPD_PASS"
+	#configure_folder "$VSFTPD_USER"
+	#start_templates "/vsftpd.cnf.template" "/etc/vsftpd.conf"
+	#/usr/sbin/vsftpd /etc/vsftpd.conf
+	
+	adduser --disabled-password "$VSFTPD_USER"
+	echo "$VSFTPD_USER":"$VSFTPD_PASS" | /usr/sbin/chpasswd
+
+	usermod --home /home/$VSFTPD_USER/ftp/files "$VSFTPD_USER"
+	chown "$VSFTPD_USER":"$VSFTPD_USER" /home/$VSFTPD_USER/ftp/files
+
+	echo "$VSFTPD_USER" > /etc/vsftpd/vsftpd.userlist
+	
+	exec vsftpd /etc/vsftpd/vsftpd.conf
+
 }
 
 init_vsftpd $@

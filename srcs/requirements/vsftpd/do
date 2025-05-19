@@ -1,0 +1,16 @@
+# syntax=docker/dockerfile:1
+ARG BASE_DIGEST
+FROM alpine@sha256:${BASE_DIGEST}
+
+ARG VSFTPD_PORT
+ARG VSFTPD_VERSION
+ARG VSFTPD_SCRIPT
+
+RUN apk -U upgrade && apk add vsftpd shadow
+
+COPY --chmod=644 ${VSFTPD_SCRIPT}vsftpd.cnf.template /etc/vsftpd/vsftpd.conf
+
+COPY --chmod=744 ${VSFTPD_SCRIPT}vsftpd_entrypoint.sh /etc/entrypoint.sh
+
+EXPOSE ${VSFTPD_PORT}
+ENTRYPOINT ["sh", "/etc/entrypoint.sh"]

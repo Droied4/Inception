@@ -48,9 +48,9 @@ services:
       - VSFTPD_USER
       - VSFTPD_PASS
     ports:
-      - "${VSFTPD_PORT}:${VSFTPD_PORT}"
       - "20:20"
-      - "40000-40005:40000-40005"
+      - "${VSFTPD_PORT}:${VSFTPD_PORT}"
+      - "5000-5010:5000-5010"
     # expose:
     #   - "${VSFTPD_PORT}"
     #   - "${VSFTPD_DATA_PORT}"
