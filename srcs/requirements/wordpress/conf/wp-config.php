@@ -17,6 +17,13 @@ define( 'DB_COLLATE', '' );
 
 $table_prefix = getenv('WP_PREFIX');
 
+/*Redis Bonus*/
+define('WP_REDIS_HOST', 'redis');
+define('WP_REDIS_PORT', 6379);
+define('WP_CACHE', true);
+define('WP_REDIS_DISABLED', false);
+
+
 /**
  * For developers: WordPress debugging mode.
  *
@@ -29,7 +36,7 @@ $table_prefix = getenv('WP_PREFIX');
  *
  * @link https://developer.wordpress.org/advanced-administration/debug/debug-wordpress/
  */
-define( 'WP_DEBUG', false );
+define( 'WP_DEBUG', true );
 
 /* Add any custom values between this line and the "stop editing" line. */
 

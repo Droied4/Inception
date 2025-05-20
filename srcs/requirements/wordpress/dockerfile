@@ -14,7 +14,9 @@ RUN	apk update && \
 		curl=${CURL_VERSION} \
 		php${PHP_VERSION} \
 		php${PHP_VERSION}-fpm \ 
-		php${PHP_VERSION}-mysqli 
+		php${PHP_VERSION}-mysqli \ 
+		php${PHP_VERSION}-redis \
+		php${PHP_VERSION}-ctype
 
 COPY	--chmod=644 ${WP_CONF}wp-config.php /
 COPY	--chmod=755 ${WP_SCRIPT}wp_entrypoint.sh /entrypoint.sh

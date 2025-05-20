@@ -26,6 +26,26 @@ download_wp()
 	echo "Wordpress Instaled!"
 }
 
+download_redis()
+{
+	version=$1
+	volume_path=$2
+	
+	if [ ! -d $volume_path/wp-content/plugins/redis-cache ]; then
+	curl -L https://downloads.wordpress.org/plugin/redis-cache.$version.zip -o redis-cache.zip
+	unzip redis-cache.zip
+	rm redis-cache.zip
+	mv /redis-cache $volume_path/wp-content/plugins/
+	echo "Redis-cache plugin instaled!"
+		else
+	echo "Redis-cache plugin already instaled"
+	fi
+	if [ ! -f $volume_path/wp-content/object-cache.php ]; then
+	    cp $volume_path/wp-content/plugins/redis-cache/includes/object-cache.php $volume_path/wp-content/object-cache.php
+	    echo "Object cache activated"
+	fi
+}
+
 add_group()
 {
 	group=$1
@@ -60,6 +80,7 @@ init_wp()
 	connection_loop "mariadb" "3306"
 	add_group	"www-data" "www-data" "/var/www/html"
 	download_wp 	"/var/www/html"
+	download_redis	"2.5.0" "var/www/html"
 	conf_php 	"${PHP_VERSION}"
 	exec php-fpm${PHP_VERSION} -F
 }

@@ -2,25 +2,19 @@
 
 set -e
 
-configure_user()
+config_file()
 {
-	user=$1
-	group=$2
-	
-	 if ! getent group "$group" > /dev/null 2>&1; then
-	 	echo "Add group $group"
-	 	addgroup -S "$group";
-	 fi
-	 if ! getent passwd "$user" > /dev/null 2>&1; then
-	 	echo "Add user $user"
-	 	adduser -S -D -G "$group" "$user";
-	 fi
+	dir=$1
+
+	sed -i "s|bind 127.0.0.1|#bind 127.0.0.1|g" $dir
+	sed -i "s|# maxmemory <bytes>|maxmemory 2mb|g" $dir
+	sed -i "s|# maxmemory-policy noeviction|maxmemory-policy allkeys-lru|g" $dir
 }
 
 init_redis()
 {
-	#configure_user "redis" "redis"
-	exec "$1"
+	config_file "/etc/redis.conf"
+	exec "$1" --protected-mode no
 }
 
 init_redis $@
