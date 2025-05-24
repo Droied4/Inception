@@ -43,10 +43,11 @@ init_nginx()
 	add_group "nginx" "nginx" "var/www/html"
 	generate_ssl_cert
 	start_templates
+	exec "$@"
 }
 
 if [ "$1" = "nginx" ]; then
-	init_nginx
+	init_nginx "$@"
+else
+	exec "$@"
 fi
-
-exec "$@"
