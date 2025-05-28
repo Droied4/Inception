@@ -14,8 +14,8 @@ RUN 	apk update && \
 		su-exec=${SEXEC_VERSION} \ 
 		mariadb-client=${MARIADB_VERSION}
 
-RUN	mkdir -p /run/mysqld /var/lib/mysql && \
-	chown -R mysql:mysql /var/lib/mysql /run/mysqld
+RUN	mkdir -p /run/mysqld && \
+	chown -R mysql:mysql /run/mysqld
 
 COPY 	--chmod=755 ${MARIADB_SCRIPT}mdb_entrypoint.sh /entrypoint.sh
 

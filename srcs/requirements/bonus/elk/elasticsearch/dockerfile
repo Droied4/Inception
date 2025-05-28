@@ -1,0 +1,19 @@
+# syntax=docker/dockerfile:1
+ARG BASE_DIGEST=43180c492a5e6cedd8232e8f77a454f666f247586853eecb90258b26688ad1d3
+FROM alpine@sha256:${BASE_DIGEST}
+
+ARG ELASTIC_PORT
+ARG ELASTIC_VERSION
+ARG ELASTIC_SCRIPT
+ARG CURL_VERSION=8.12.1-r0
+ARG JAVA_VERSION=17.0.15_p6-r0
+
+RUN apk update && \
+	apk add --no-cache openjdk17=${JAVA_VERSION} \
+					   curl=${CURL_VERSION}
+
+COPY --chmod=744 ${ELASTIC_SCRIPT}elastic_entrypoint.sh /entrypoint.sh
+
+ENTRYPOINT ["/entrypoint.sh"]
+EXPOSE ${ELASTIC_PORT}
+CMD ["tail"]

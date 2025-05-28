@@ -93,7 +93,6 @@ services:
         WP_PORT:          ${WORDPRESS_PORT}
         WP_SCRIPT:        ${SCRIPTS}
         WP_CONF:          ${CONF}
-        WP_VERSION:       ${WP_VERSION}
         PHP_VERSION:      ${PHP_VERSION}
     secrets:
       - db_password
