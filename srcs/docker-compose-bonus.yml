@@ -96,15 +96,20 @@ services:
         PHP_VERSION:      ${PHP_VERSION}
     secrets:
       - db_password
+      - db_root_password
     environment:
       - WP_DB=${MYSQL_DATABASE}
+      - WP_TITLE
       - WP_DB_USER=${MYSQL_USER}
-      - WP_DB_PASSWORD_FILE=/run/secrets/db_password
+      - WP_DB_ADMIN=${MYSQL_ROOT}
+      - WP_DB_USER_PASS_FILE=/run/secrets/db_password
+      - WP_DB_ROOT_PASS_FILE=/run/secrets/db_root_password
       - WP_HOST
       - WP_CHARSET
       - WP_PREFIX
       - WP_DEBUG
       - WP_VERSION
+      - DOMAIN_NAME
       - PHP_VERSION
     expose:
       - "${WORDPRESS_PORT}"

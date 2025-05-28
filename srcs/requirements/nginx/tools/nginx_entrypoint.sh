@@ -26,7 +26,7 @@ generate_ssl_cert()
 		-newkey rsa:2048 \
 		-keyout ${SSL_PATH}/${DOMAIN_NAME}.key \
 		-out	${SSL_PATH}/${DOMAIN_NAME}.crt \
-		-subj "/C=ES/ST=Catalonia/L=Barcelona/O=42Barcelona/OU=42 School/CN=deordone.42.fr" \
+		-subj "/C=ES/ST=Catalonia/L=Barcelona/O=42Barcelona/OU=42 School/CN=${DOMAIN_NAME}" \
 		> /dev/null 2>&1
 	echo "SSL Certification Generated!"
 }

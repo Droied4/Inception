@@ -15,7 +15,15 @@ RUN	apk update && \
 		php${PHP_VERSION}-fpm \ 
 		php${PHP_VERSION}-mysqli \ 
 		php${PHP_VERSION}-redis \
-		php${PHP_VERSION}-ctype
+		php${PHP_VERSION}-ctype \
+		php${PHP_VERSION}-phar \
+		php${PHP_VERSION}-mbstring \
+		php${PHP_VERSION}-xml      \
+		php${PHP_VERSION}-dom  \
+		php${PHP_VERSION}-xmlreader \
+		php${PHP_VERSION}-curl \
+		php${PHP_VERSION}-cli \
+		php${PHP_VERSION}-zlib
 
 COPY	--chmod=644 ${WP_CONF}wp-config.php /
 COPY	--chmod=755 ${WP_SCRIPT}wp_entrypoint.sh /entrypoint.sh

@@ -19,11 +19,24 @@ download_wp()
 	if [ ! -f $volume_path/index.php ]; then
 	echo "Installing Wordpress"
 	cd $volume_path && \
-	curl -O https://wordpress.org/wordpress-${WP_VERSION}.tar.gz > /dev/null 2>&1 && \
+	curl -L -O https://wordpress.org/wordpress-${WP_VERSION}.tar.gz > /dev/null 2>&1 && \
 	tar -xzf wordpress-${WP_VERSION}.tar.gz --strip-components=1 && \
 	rm wordpress-${WP_VERSION}.tar.gz
 	fi
 	echo "Wordpress Instaled!"
+}
+
+download_wpcli()
+{
+	volume_path=$1
+	if [ ! -f $usr/local/bin/wp ]; then
+	echo "Installing wp-cli"
+	curl -L -o wp-cli.phar https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar > /dev/null 2>&1 && \
+	chmod 744 wp-cli.phar && \
+	mv wp-cli.phar /usr/local/bin/wp
+	else
+		echo "wp-cli Instaled!"
+	fi
 }
 
 download_redis()
@@ -75,13 +88,48 @@ conf_php()
 	fi
 }
 
+conf_wp()
+{
+	php_version=$1
+	volume=$2 
+	
+	WP="php$php_version -d memory_limit=256M /usr/local/bin/wp --path=$volume"	
+	echo $WP
+	user_password_file=/run/secrets/db_password	
+	admin_password_file=/run/secrets/db_root_password
+	
+	if ! $WP core is-installed; then
+	echo "Creating Worpress tables"
+	$WP core install --path=$volume     						\
+		--url="${DOMAIN_NAME}" 									\
+		--title="${WP_TITLE}"  									\
+		--admin_user="${WP_DB_ADMIN}"  							\
+		--admin_password="$(cat $admin_password_file)" 			\
+		--admin_email="${WP_DB_ADMIN}@dev.com"					\
+		--skip-email											\
+		--allow-root
+	fi 
+	if [ -z "$($WP user list --format=ids)" ]; then
+		echo "Creating ${WP_DB_USER} user"
+		$WP user create --path=$volume								\
+		"${WP_DB_USER}" "${WP_DB_USER}@dev.com" 				\
+		--role=author 											\
+		--user_pass="$(cat $user_password_file)" 				\
+		--allow-root
+	fi
+	echo "Worpdress Configured!"
+}
+
 init_wp()
 {
+	volume=/var/www/html
 	connection_loop "mariadb" "3306"
-	add_group	"www-data" "www-data" "/var/www/html"
-	download_wp 	"/var/www/html"
-	download_redis	"2.5.0" "var/www/html"
+	add_group	"www-data" "www-data" "$volume"
+	download_wp 	"$volume"
+	download_wpcli	"$volume"
+	download_redis	"2.5.0" "$volume"
 	conf_php 	"${PHP_VERSION}"
+	conf_wp		"${PHP_VERSION}" "$volume"	
 	exec php-fpm${PHP_VERSION} -F
 }
 
