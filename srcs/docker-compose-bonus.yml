@@ -81,6 +81,8 @@ services:
       - ${WP_VOLUME}:/var/www/html
     networks:
       - ${NETWORK}
+    depends_on:
+      - mariadb
     restart: unless-stopped
 
   wordpress:
