@@ -6,18 +6,40 @@ secrets:
     file: ${SECRETS}/db_user_password.txt
   db_root_password:
     file: ${SECRETS}/db_root_password.txt
+  ftp_password:
+    file: ${SECRETS}/ftp_user_password.txt
   
 services:
+  elasticsearch:
+    container_name: elasticsearch
+    build:
+      context:
+        ${ELASTIC_PATH}
+      args:
+        BASE_DIGEST:          ${DEBIAN_DIGEST}
+        ELASTIC_PORT:         ${ELASTIC_PORT}
+        ELASTIC_SCRIPT:       ${SCRIPTS}
+        ELASTIC_VERSION:      ${ELASTIC_VERSION}
+    image: elasticsearch
+    environment:
+      - ELASTIC_VERSION
+    expose:
+      - "${ELASTIC_PORT}"
+    networks:
+      - ${NETWORK}
+    restart: unless-stopped
+
   nginx:
     container_name: nginx
     build: 
       context: 
         ${NGINX_PATH}
       args:
-        BASE_DIGEST:        ${BASE_DIGEST}
+        BASE_DIGEST:        ${ALPINE_DIGEST}
         NGINX_PORT:         ${NGINX_PORT}
         NGINX_SCRIPT:       ${SCRIPTS}
         NGINX_VERSION:      ${NGINX_VERSION}
+    image: nginx
     environment:
       - NGINX_PORT
       - DOMAIN_NAME
@@ -25,8 +47,6 @@ services:
       - SSL_PATH
     ports:
       - "${NGINX_PORT}:${NGINX_PORT}"
-    volumes:
-      - ${WP_VOLUME}:/var/www/html
     networks:
       - ${NETWORK}
     restart: unless-stopped
@@ -37,10 +57,11 @@ services:
       context:
         ${VSFTPD_PATH}
       args:
-        BASE_DIGEST:      ${BASE_DIGEST}
+        BASE_DIGEST:      ${ALPINE_DIGEST}
         VSFTPD_PORT:      ${VSFTPD_PORT}
         VSFTPD_SCRIPT:    ${SCRIPTS}
         VSFTPD_VERSION:   ${VSFTPD_VERSION}
+    image: vsftpd
     environment:
       - VSFTPD_VERSION
       - VSFTPD_DATA_PORT
@@ -67,11 +88,12 @@ services:
       context:
         ${ADMINER_PATH}
       args:
-        BASE_DIGEST:      ${BASE_DIGEST}
+        BASE_DIGEST:      ${ALPINE_DIGEST}
         ADMINER_PORT:     ${ADMINER_PORT}
         ADMINER_SCRIPT:   ${SCRIPTS}
         ADMINER_VERSION:  ${ADMINER_VERSION}
         PHP_VERSION:      ${PHP_VERSION}
+    image: adminer
     environment:
       - ADMINER_VERSION
       - PHP_VERSION
@@ -91,11 +113,12 @@ services:
       context:
         ${WORDPRESS_PATH}
       args:
-        BASE_DIGEST:      ${BASE_DIGEST}
+        BASE_DIGEST:      ${ALPINE_DIGEST}
         WP_PORT:          ${WORDPRESS_PORT}
         WP_SCRIPT:        ${SCRIPTS}
         WP_CONF:          ${CONF}
         PHP_VERSION:      ${PHP_VERSION}
+    image: wordpress
     secrets:
       - db_password
       - db_root_password
@@ -129,10 +152,11 @@ services:
       context:
         ${MARIADB_PATH}
       args:
-        BASE_DIGEST:      ${BASE_DIGEST}
+        BASE_DIGEST:      ${ALPINE_DIGEST}
         MARIADB_PORT:     ${MARIADB_PORT}
         MARIADB_SCRIPT:   ${SCRIPTS}
         MARIADB_VERSION:  ${MARIADB_VERSION}
+    image: mariadb
     secrets:
       - db_password
       - db_root_password
@@ -158,10 +182,11 @@ services:
        context:
          ${REDIS_PATH}
        args:
-         BASE_DIGEST:      ${BASE_DIGEST}
+         BASE_DIGEST:      ${ALPINE_DIGEST}
          REDIS_PORT:       ${REDIS_PORT}
          REDIS_SCRIPT:     ${SCRIPTS}
          REDIS_VERSION:    ${REDIS_VERSION}
+     image: redis
      environment:
        - REDIS_VERSION
      expose:
