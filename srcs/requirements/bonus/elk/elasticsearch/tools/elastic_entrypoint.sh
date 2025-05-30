@@ -19,8 +19,6 @@ add_group()
 		echo "Creating user $user"
     		useradd --system -g "$group" "$user"
 	fi
-	chown -R $user:$group $dir
-	echo "Echo siiii"	
 }
 
 
@@ -38,18 +36,28 @@ config_elastic()
 	echo "Elastic configured!"
 }
 
-init_service()
+prepare_exec()
 {
-	check_env
-	download_elastic ${ELASTIC_VERSION}
-	add_group "elasticgroup" "elasticuser" "elasticsearch-${ELASTIC_VERSION}"
-	config_elastic
-	#su elasticuser 
-	#./elasticsearch-${ELASTIC_VERSION}/bin/elasticsearch
-	exec "$@" -f /dev/null
+	user=$1
+	group=$2
+	path=$3
+	chown -R $user:$group $path
+	cd $path/bin/
 }
 
-if [ "$1" = "tail" ]; then
+init_service()
+{
+	dir=/elasticsearch-${ELASTIC_VERSION}
+	user=elasticuser
+	check_env
+	add_group "elasticgroup" "$user" "$dir"
+	download_elastic ${ELASTIC_VERSION}
+	config_elastic
+	prepare_exec "$user" "elasticgroup" "$dir"
+	exec gosu $user "$@"
+}
+
+if [ "$1" = "./elasticsearch" ]; then
 	init_service "$@"
 else
 	exec "$@"

@@ -9,13 +9,10 @@ ARG CURL_VERSION=7.74.0-1.3+deb11u14
 ARG JAVA_VERSION=17.0.15+6-1~deb11u1
 
 RUN apt-get update && \
-	apt-get install -y openjdk-17-jdk curl
-
-#openjdk-17-jdk=${JAVA_VERSION} \
-#	        curl=${CURL_VERSION}
+	apt-get install -y openjdk-17-jdk=${JAVA_VERSION} curl=${CURL_VERSION} gosu
 
 COPY --chmod=744 ${ELASTIC_SCRIPT}elastic_entrypoint.sh /entrypoint.sh
 
 ENTRYPOINT ["/entrypoint.sh"]
 EXPOSE ${ELASTIC_PORT}
-CMD ["tail"]
+CMD ["./elasticsearch"]
