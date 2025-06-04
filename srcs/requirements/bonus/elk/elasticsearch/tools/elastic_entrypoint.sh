@@ -9,7 +9,6 @@ add_group()
 {
 	group=$1
 	user=$2
-	dir=$3
 
 	if ! getent group "$group" ; then
 		echo "Creating group $group"
@@ -25,9 +24,14 @@ add_group()
 download_elastic()
 {
 	elastic_version=$1
+	volume=$2
+	cd $volume
+	if [ ! -d $volume/elasticsearch-$elastic_version ]; then
+	echo "Installing Elasticsearch"
 	curl -L -o elastic.tar.gz https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-$elastic_version-linux-x86_64.tar.gz && \
 	tar -xzf elastic.tar.gz && \
 	rm elastic.tar.gz
+	fi
 	echo "Elasticsearch installed!"
 }
 
@@ -47,13 +51,15 @@ prepare_exec()
 
 init_service()
 {
-	dir=/elasticsearch-${ELASTIC_VERSION}
+	volume="/usr/share/elasticsearch"
+	dir=$volume/elasticsearch-${ELASTIC_VERSION}
 	user=elasticuser
+	group=elasticgroup
 	check_env
-	add_group "elasticgroup" "$user" "$dir"
-	download_elastic ${ELASTIC_VERSION}
+	add_group "$group" "$user"
+	download_elastic ${ELASTIC_VERSION} "$volume"
 	config_elastic
-	prepare_exec "$user" "elasticgroup" "$dir"
+	prepare_exec "$user" "$group" "$dir"
 	exec gosu $user "$@"
 }
 

@@ -8,9 +8,10 @@ COMPOSE = $(DOCKER) compose
 #                               SOURCES                                        #
 # ╚══════════════════════════════════════════════════════════════════════════╝ # 
 
-COMPOSE_PATH = -f ./srcs/docker-compose-bonus.yml
+MANDATORY_PATH = -f ./srcs/mandatory.yml
+BONUS_PATH = -f ./srcs/bonus.yml
+ELK_PATH = -f ./srcs/elk.yml
 ENV_SAMPLE= ./srcs/.env.sample
-
 
 # ╔══════════════════════════════════════════════════════════════════════════╗ #  
 #                               COLORS                                         #
@@ -31,7 +32,13 @@ NC=\033[0m # No color
 all: up
 	
 up:
-	@$(COMPOSE) $(COMPOSE_PATH) $@ --build -d
+	@$(COMPOSE) $(MANDATORY_PATH) $@ --build -d
+
+bonus: up
+	@$(COMPOSE) $(BONUS_PATH) up --build -d
+
+elk:
+	@$(COMPOSE) $(ELK_PATH) up --build -d
 
 setup:
 	cp ${ENV_SAMPLE} srcs/.env
@@ -42,7 +49,9 @@ it:
 
 clean: images
 	@echo
-	@$(COMPOSE) $(COMPOSE_PATH) down
+	@$(COMPOSE) $(MANDATORY_PATH) down
+	@$(COMPOSE) $(BONUS_PATH) down
+	@$(COMPOSE) $(ELK_PATH) down
 	@printf "$(RED)Removing images above$(NC)\n"
 	@$(DOCKER) container prune -f && $(DOCKER) image prune -a -f
 	@printf "$(GREEN) $@ COMPLETE! $(NC)\n"
@@ -55,13 +64,14 @@ fclean: clean images
 	@printf "$(GREEN)COMPLETE! $(NC)\n"
 
 logs:
-	@$(COMPOSE) $(COMPOSE_PATH) $@ $(ID)
+	@$(DOCKER) $@ $(ID)
 
 ps:
-	@$(COMPOSE) $(COMPOSE_PATH) $@ -a
+	@$(DOCKER) $@ -a
 
 images:
 	@$(DOCKER) $@
+
 re: fclean up
 
-.PHONY: all up setup it clean down logs ps images re
+.PHONY: all up bonus elk setup it clean down logs ps images re

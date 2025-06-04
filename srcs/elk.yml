@@ -1,0 +1,49 @@
+networks:
+  app-network: {}
+
+secrets:
+  ftp_password:
+    file: ${SECRETS}/ftp_user_password.txt
+  
+services:
+  logstash:
+    container_name: logstash
+    build:
+      context:
+        ${LOGSTASH_PATH}
+      args:
+        BASE_DIGEST:        ${DEBIAN_DIGEST}
+        LOGSTASH_PORT:      ${LOGSTASH_PORT}
+        LOGSTASH_SCRIPT:    ${SCRIPTS}
+        LOGSTASH_VERSION:   ${LOGSTASH_VERSION}
+    image: logstash
+    environment:
+      -  LOGSTASH_VERSION
+    expose:
+      - "${LOGSTASH_PORT}"
+    networks:
+      - ${NETWORK}
+    volumes:
+      - ${ELK_VOLUME}:/usr/share/logstash
+    restart: unless-stopped
+
+  elasticsearch:
+    container_name: elasticsearch
+    build:
+      context:
+        ${ELASTIC_PATH}
+      args:
+        BASE_DIGEST:          ${DEBIAN_DIGEST}
+        ELASTIC_PORT:         ${ELASTIC_PORT}
+        ELASTIC_SCRIPT:       ${SCRIPTS}
+        ELASTIC_VERSION:      ${ELASTIC_VERSION}
+    image: elasticsearch
+    environment:
+      - ELASTIC_VERSION
+    expose:
+      - "${ELASTIC_PORT}"
+    networks:
+      - ${NETWORK}
+    volumes:
+      - ${ELK_VOLUME}:/usr/share/elasticsearch
+    restart: unless-stopped
