@@ -34,7 +34,7 @@ all: up
 up:
 	@$(COMPOSE) $(MANDATORY_PATH) $@ --build -d
 
-bonus: up
+bonus: 
 	@$(COMPOSE) $(BONUS_PATH) up --build -d
 
 elk:

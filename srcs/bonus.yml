@@ -6,6 +6,29 @@ secrets:
     file: ${SECRETS}/ftp_user_password.txt
   
 services:
+  healthcheck:
+    container_name: healthcheck
+    build:
+      context:
+        ${HEALTH_PATH}
+      args:
+        BASE_DIGEST:      ${ALPINE_DIGEST}
+        HEALTH_PORT:      ${HEALTH_PORT}
+        HEALTH_SCRIPT:    ${SCRIPTS}
+    environment:
+       - NGINX_PORT
+       - MARIADB_PORT
+       - WORDPRESS_PORT
+       - REDIS_PORT
+       - ADMINER_PORT
+       - VSFTPD_PORT
+    image: healthcheck
+    expose:
+      - "${HEALTH_PORT}"
+    networks:
+      - ${NETWORK}
+    restart: unless-stopped
+
   vsftpd:
     container_name: vsftpd
     build:
@@ -58,8 +81,6 @@ services:
       - ${WP_VOLUME}:/var/www/html
     networks:
       - ${NETWORK}
-    depends_on:
-      - mariadb
     restart: unless-stopped
 
   redis:
