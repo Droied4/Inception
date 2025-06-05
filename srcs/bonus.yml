@@ -23,6 +23,8 @@ services:
        - ADMINER_PORT
        - VSFTPD_PORT
     image: healthcheck
+    volumes:
+      - ${WP_VOLUME}:/var/www/html
     expose:
       - "${HEALTH_PORT}"
     networks:

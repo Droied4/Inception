@@ -29,16 +29,11 @@ NC=\033[0m # No color
 #                               RULES                                          #
 # ╚══════════════════════════════════════════════════════════════════════════╝ # 
 
-all: up
-	
-up:
+up: 
 	@$(COMPOSE) $(MANDATORY_PATH) $@ --build -d
 
 bonus: 
-	@$(COMPOSE) $(BONUS_PATH) up --build -d
-
-elk:
-	@$(COMPOSE) $(ELK_PATH) up --build -d
+	@$(COMPOSE) ${MANDATORY_PATH} $(BONUS_PATH) up --build -d
 
 setup:
 	cp ${ENV_SAMPLE} srcs/.env
@@ -74,4 +69,4 @@ images:
 
 re: fclean up
 
-.PHONY: all up bonus elk setup it clean down logs ps images re
+.PHONY: up bonus setup it clean down logs ps images re

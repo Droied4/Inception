@@ -22,23 +22,48 @@ check_service()
 	name=$1
 	host=$2
 	port=$3
+	file=$4
 
 	until nc -z "$host" "$port"; do
 		echo "Waiting for $name"
 		sleep 2
 	done
 	echo "$name Operative!"
+	sed -i "s|<h2> $name : Waiting... </h2>|<h2> $name : OK! </h2>|" $file
+}
+
+generate_html()
+{
+	file=$1
+cat << EOF > $file
+<html>
+<body>
+<title> Health Check </title>
+<h1> Status of the services </H1>
+<h2> Nginx : Waiting... </h2>
+<h2> MariaDb : Waiting... </h2>
+<h2> Wordpress : Waiting... </h2>
+<h2> Redis : Waiting... </h2>
+<h2> Ftp Server : Waiting... </h2>
+<h2> Adminer : Waiting... </h2>
+</body>
+</html>
+EOF
+
 }
 
 init_healthcheck()
 {
+	file=/var/www/html/health/index.html
 	check_env
-	check_service "nginx" "nginx" "${NGINX_PORT}" &
-	check_service "mariadb" "mariadb" "${MARIADB_PORT}" &
-	check_service "wordpress" "wordpress" "${WORDPRESS_PORT}" &
-	check_service "redis" "redis" "${REDIS_PORT}" &
-	check_service "adminer" "adminer" "${ADMINER_PORT}" &
-	check_service "FTP server" "vsftPd" "${VSFTPD_PORT}" &
+	mkdir -p /var/www/html/health
+	generate_html "$file"
+	check_service "Nginx" "nginx" "${NGINX_PORT}" "$file" &
+	check_service "MariaDb" "mariadb" "${MARIADB_PORT}" "$file" &
+	check_service "Wordpress" "wordpress" "${WORDPRESS_PORT}" "$file" &
+	check_service "Redis" "redis" "${REDIS_PORT}" "$file" &
+	check_service "Adminer" "adminer" "${ADMINER_PORT}" "$file" &
+	check_service "Ftp Server" "vsftPd" "${VSFTPD_PORT}" "$file" &
 	wait
 	echo "All services are operative :D!"
 }

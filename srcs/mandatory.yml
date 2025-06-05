@@ -26,6 +26,8 @@ services:
       - SSL_PATH
     ports:
       - "${NGINX_PORT}:${NGINX_PORT}"
+    volumes:
+      - ${WP_VOLUME}:/var/www/html
     networks:
       - ${NETWORK}
     restart: unless-stopped
