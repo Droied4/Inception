@@ -1,0 +1,100 @@
+services:
+  healthcheck:
+    container_name: healthcheck
+    build:
+      context:
+        ${HEALTH_PATH}
+      args:
+        BASE_DIGEST:      ${ALPINE_DIGEST}
+        HEALTH_PORT:      ${HEALTH_PORT}
+        HEALTH_SCRIPT:    ${SCRIPTS}
+    environment:
+       - NGINX_PORT
+       - MARIADB_PORT
+       - WORDPRESS_PORT
+       - REDIS_PORT
+       - ADMINER_PORT
+       - VSFTPD_PORT
+    image: healthcheck
+    volumes:
+      - ${WP_VOLUME}:/var/www/html
+    expose:
+      - "${HEALTH_PORT}"
+    networks:
+      - ${NETWORK}
+    restart: unless-stopped
+
+  vsftpd:
+    container_name: vsftpd
+    build:
+      context:
+        ${VSFTPD_PATH}
+      args:
+        BASE_DIGEST:      ${ALPINE_DIGEST}
+        VSFTPD_PORT:      ${VSFTPD_PORT}
+        VSFTPD_SCRIPT:    ${SCRIPTS}
+        VSFTPD_VERSION:   ${VSFTPD_VERSION}
+    secrets:
+      - ftp_password
+    image: vsftpd
+    environment:
+      - VSFTPD_VERSION
+      - VSFTPD_DATA_PORT
+      - VSFTPD_PORT
+      - VSFTPD_USER
+      - VSFTPD_PASS=/run/secrets/ftp_password
+    ports:
+      - "20:20"
+      - "${VSFTPD_PORT}:${VSFTPD_PORT}"
+      - "5000-5010:5000-5010"
+    # expose:
+    #   - "${VSFTPD_PORT}"
+    #   - "${VSFTPD_DATA_PORT}"
+    #   - "40000-40005:40000-40005"
+    volumes:
+      - ${WP_VOLUME}:/home/${VSFTPD_USER}/ftp/files
+    networks:
+      - ${NETWORK}
+    restart: unless-stopped
+
+  adminer:
+    container_name: adminer
+    build:
+      context:
+        ${ADMINER_PATH}
+      args:
+        BASE_DIGEST:      ${ALPINE_DIGEST}
+        ADMINER_PORT:     ${ADMINER_PORT}
+        ADMINER_SCRIPT:   ${SCRIPTS}
+        ADMINER_VERSION:  ${ADMINER_VERSION}
+        PHP_VERSION:      ${PHP_VERSION}
+    image: adminer
+    environment:
+      - ADMINER_VERSION
+      - PHP_VERSION
+    expose:
+      - "${ADMINER_PORT}"
+    volumes:
+      - ${WP_VOLUME}:/var/www/html
+    networks:
+      - ${NETWORK}
+    restart: unless-stopped
+
+  redis:
+     container_name: redis
+     build:
+       context:
+         ${REDIS_PATH}
+       args:
+         BASE_DIGEST:      ${ALPINE_DIGEST}
+         REDIS_PORT:       ${REDIS_PORT}
+         REDIS_SCRIPT:     ${SCRIPTS}
+         REDIS_VERSION:    ${REDIS_VERSION}
+     image: redis
+     environment:
+       - REDIS_VERSION
+     expose:
+       - "${REDIS_PORT}"
+     networks:
+       - ${NETWORK}
+     restart: unless-stopped

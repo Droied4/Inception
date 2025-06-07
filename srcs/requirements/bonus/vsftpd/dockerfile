@@ -1,0 +1,21 @@
+# syntax=docker/dockerfile:1
+ARG BASE_DIGEST=43180c492a5e6cedd8232e8f77a454f666f247586853eecb90258b26688ad1d3
+FROM alpine@sha256:${BASE_DIGEST}
+
+ARG VSFTPD_PORT
+ARG VSFTPD_VERSION
+ARG VSFTPD_SCRIPT
+ARG GTXT_VERSION=0.22.5-r0
+ARG SHADOW_VERSION=4.17.3-r0
+
+RUN 	apk update && \
+	apk add --no-cache vsftpd=${VSFTPD_VERSION} \
+	gettext=${GTXT_VERSION} \
+	shadow 
+
+COPY --chmod=644 ${VSFTPD_SCRIPT}vsftpd.cnf.template /
+COPY --chmod=744 ${VSFTPD_SCRIPT}vsftpd_entrypoint.sh /entrypoint.sh
+
+ENTRYPOINT ["/entrypoint.sh"]
+EXPOSE ${VSFTPD_PORT}
+CMD ["vsftpd"]

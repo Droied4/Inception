@@ -6,4 +6,4 @@ secrets
 
 *.dockerignore
 
-
+*.swp

@@ -5,16 +5,14 @@ set -e
 add_group()
 {
 	group=$1
-	group_id=$2
-	user=$3
-	user_id=$4
-	dir=$5
+	user=$2
+	dir=$3
 
 	if  ! getent group "$group" > /dev/null 2>&1; then
-		addgroup -g $group_id -S $group; 
+		addgroup -S $group; 
 	fi 
 	if  ! getent passwd "$user" > /dev/null 2>&1; then
-		adduser -S -D -H -u $user_id -s /sbin/nologin -g $group $user;
+		adduser -S -D -H -s /sbin/nologin -g $group $user;
 	fi
 	chown -R $user:$group $dir
 	
@@ -28,7 +26,7 @@ generate_ssl_cert()
 		-newkey rsa:2048 \
 		-keyout ${SSL_PATH}/${DOMAIN_NAME}.key \
 		-out	${SSL_PATH}/${DOMAIN_NAME}.crt \
-		-subj "/C=ES/ST=Catalonia/L=Barcelona/O=42Barcelona/OU=42 School/CN=deordone.42.fr" \
+		-subj "/C=ES/ST=Catalonia/L=Barcelona/O=42Barcelona/OU=42 School/CN=${DOMAIN_NAME}" \
 		> /dev/null 2>&1
 	echo "SSL Certification Generated!"
 }
@@ -42,13 +40,14 @@ start_templates()
 
 init_nginx()
 {
-	add_group "nginx" "33" "nginx" "33" "var/www/html"
+	add_group "nginx" "nginx" "var/www/html"
 	generate_ssl_cert
 	start_templates
+	exec "$@"
 }
 
 if [ "$1" = "nginx" ]; then
-	init_nginx
+	init_nginx "$@"
+else
+	exec "$@"
 fi
-
-exec "$@"

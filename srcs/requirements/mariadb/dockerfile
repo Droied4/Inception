@@ -1,19 +1,21 @@
 # syntax=docker/dockerfile:1
-ARG BASE_DIGEST
+ARG BASE_DIGEST=43180c492a5e6cedd8232e8f77a454f666f247586853eecb90258b26688ad1d3
 FROM alpine@sha256:${BASE_DIGEST}
 
 ARG MARIADB_VERSION
 ARG MARIADB_PORT
 ARG MARIADB_SCRIPT
 ARG SEXEC_VERSION=0.2-r3
+ARG CURL_VERSION=8.12.1-r0
 
 RUN 	apk update && \
-	apk add --no-cache mariadb=${MARIADB_VERSION} \
+	apk add --no-cache \
+		mariadb=${MARIADB_VERSION} \
 		su-exec=${SEXEC_VERSION} \ 
 		mariadb-client=${MARIADB_VERSION}
 
-RUN	mkdir -p /run/mysqld /var/lib/mysql && \
-	chown -R mysql:mysql /var/lib/mysql /run/mysqld
+RUN	mkdir -p /run/mysqld && \
+	chown -R mysql:mysql /run/mysqld
 
 COPY 	--chmod=755 ${MARIADB_SCRIPT}mdb_entrypoint.sh /entrypoint.sh
 

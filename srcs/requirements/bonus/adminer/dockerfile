@@ -1,0 +1,24 @@
+# syntax=docker/dockerfile:1
+ARG BASE_DIGEST=43180c492a5e6cedd8232e8f77a454f666f247586853eecb90258b26688ad1d3
+FROM alpine@sha256:${BASE_DIGEST}
+
+ARG ADMINER_PORT
+ARG ADMINER_VERSION
+ARG ADMINER_SCRIPT
+ARG PHP_VERSION
+ARG CURL_VERSION=8.12.1-r0
+
+RUN 	apk update && \
+	apk add --no-cache curl=${CURL_VERSION} \
+		php${PHP_VERSION} \
+		php${PHP_VERSION}-fpm \
+		php${PHP_VERSION}-mysqli \
+		php${PHP_VERSION}-pdo_pgsql \
+		php${PHP_VERSION}-json \
+		php${PHP_VERSION}-session 
+
+COPY --chmod=744 ${ADMINER_SCRIPT}adminer_entrypoint.sh /entrypoint.sh
+
+ENTRYPOINT ["/entrypoint.sh"]
+EXPOSE ${ADMINER_PORT}
+CMD ["php"]
