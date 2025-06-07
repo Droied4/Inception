@@ -17,6 +17,20 @@ check_env()
 	echo "All env variables are set!"
 }
 
+safe_sed()
+{
+	name=$1
+	file=$2
+	lockdir="/tmp/html.lock"
+
+	while ! mkdir "$lockdir" 2>/dev/null; do
+		sleep 0.1
+	done
+
+	sed -i "s|<h2> $name : Waiting... </h2>|<h2> $name : OK! </h2>|" $file
+	rmdir "$lockdir"
+}
+
 check_service()
 {
 	name=$1
@@ -29,7 +43,7 @@ check_service()
 		sleep 2
 	done
 	echo "$name Operative!"
-	sed -i "s|<h2> $name : Waiting... </h2>|<h2> $name : OK! </h2>|" $file
+	safe_sed "$name" "$file"
 }
 
 generate_html()
@@ -58,6 +72,7 @@ init_healthcheck()
 	check_env
 	mkdir -p /var/www/html/health
 	generate_html "$file"
+	while true; do
 	check_service "Nginx" "nginx" "${NGINX_PORT}" "$file" &
 	check_service "MariaDb" "mariadb" "${MARIADB_PORT}" "$file" &
 	check_service "Wordpress" "wordpress" "${WORDPRESS_PORT}" "$file" &
@@ -65,7 +80,8 @@ init_healthcheck()
 	check_service "Adminer" "adminer" "${ADMINER_PORT}" "$file" &
 	check_service "Ftp Server" "vsftPd" "${VSFTPD_PORT}" "$file" &
 	wait
-	echo "All services are operative :D!"
+	sleep 300
+	done
 }
 
 init_healthcheck

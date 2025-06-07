@@ -1,10 +1,3 @@
-networks:
-  app-network: {}
-
-secrets:
-  ftp_password:
-    file: ${SECRETS}/ftp_user_password.txt
-  
 services:
   healthcheck:
     container_name: healthcheck
@@ -41,13 +34,15 @@ services:
         VSFTPD_PORT:      ${VSFTPD_PORT}
         VSFTPD_SCRIPT:    ${SCRIPTS}
         VSFTPD_VERSION:   ${VSFTPD_VERSION}
+    secrets:
+      - ftp_password
     image: vsftpd
     environment:
       - VSFTPD_VERSION
       - VSFTPD_DATA_PORT
       - VSFTPD_PORT
       - VSFTPD_USER
-      - VSFTPD_PASS
+      - VSFTPD_PASS=/run/secrets/ftp_password
     ports:
       - "20:20"
       - "${VSFTPD_PORT}:${VSFTPD_PORT}"

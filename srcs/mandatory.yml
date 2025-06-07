@@ -6,6 +6,8 @@ secrets:
     file: ${SECRETS}/db_user_password.txt
   db_root_password:
     file: ${SECRETS}/db_root_password.txt
+  ftp_password:
+    file: ${SECRETS}/ftp_user_password.txt
   
 services:
   nginx:
