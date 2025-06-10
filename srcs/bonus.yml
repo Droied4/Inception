@@ -17,7 +17,7 @@ services:
        - VSFTPD_PORT
     image: healthcheck
     volumes:
-      - ${WP_VOLUME}:/var/www/html
+      - wp:/var/www/html
     expose:
       - "${HEALTH_PORT}"
     networks:
@@ -47,12 +47,8 @@ services:
       - "20:20"
       - "${VSFTPD_PORT}:${VSFTPD_PORT}"
       - "5000-5010:5000-5010"
-    # expose:
-    #   - "${VSFTPD_PORT}"
-    #   - "${VSFTPD_DATA_PORT}"
-    #   - "40000-40005:40000-40005"
     volumes:
-      - ${WP_VOLUME}:/home/${VSFTPD_USER}/ftp/files
+      - wp:/home/${VSFTPD_USER}/ftp/files
     networks:
       - ${NETWORK}
     restart: unless-stopped
@@ -75,7 +71,7 @@ services:
     expose:
       - "${ADMINER_PORT}"
     volumes:
-      - ${WP_VOLUME}:/var/www/html
+      - wp:/var/www/html
     networks:
       - ${NETWORK}
     restart: unless-stopped

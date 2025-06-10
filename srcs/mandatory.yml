@@ -1,6 +1,20 @@
 networks:
   app-network: {}
 
+volumes:
+  wp:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ${WP_VOLUME}
+  db:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ${MDB_VOLUME}
+
 secrets:
   db_password:
     file: ${SECRETS}/db_user_password.txt
@@ -29,7 +43,7 @@ services:
     ports:
       - "${NGINX_PORT}:${NGINX_PORT}"
     volumes:
-      - ${WP_VOLUME}:/var/www/html
+      - wp:/var/www/html
     networks:
       - ${NETWORK}
     restart: unless-stopped
@@ -66,7 +80,7 @@ services:
     expose:
       - "${WORDPRESS_PORT}"
     volumes:
-      - ${WP_VOLUME}:/var/www/html
+      - wp:/var/www/html
     networks:
       - ${NETWORK}
     depends_on:
@@ -98,7 +112,7 @@ services:
     expose:
       - "${MARIADB_PORT}"
     volumes:
-      - ${MDB_VOLUME}:/var/lib/mysql
+      - db:/var/lib/mysql
     networks:
       - ${NETWORK}
     restart: unless-stopped
