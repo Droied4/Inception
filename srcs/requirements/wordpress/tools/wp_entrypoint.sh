@@ -109,7 +109,7 @@ conf_wp()
 		--skip-email											\
 		--allow-root
 	fi 
-	if [ -z "$($WP user list --format=ids)" ]; then
+	if ! $WP user get ${WP_DB_USER} --field=ID --quiet; then
 		echo "Creating ${WP_DB_USER} user"
 		$WP user create --path=$volume								\
 		"${WP_DB_USER}" "${WP_DB_USER}@dev.com" 				\
