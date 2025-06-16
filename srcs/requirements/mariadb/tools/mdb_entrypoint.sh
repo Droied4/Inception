@@ -39,12 +39,12 @@ start_database()
 	while ! mysqladmin ping --silent; do
 	    echo "Waiting for Mariadb..."
 	    sleep 1
+	done
 
 	create_database
 
 	mysql -u root -p"$db_root_password" < ${MYSQL_DATADIR}/init-db.sql > /dev/null 2>&1
 	mysqladmin shutdown -u root -p"$db_root_password"
-	done
 fi
 	
 echo "Database Created!"

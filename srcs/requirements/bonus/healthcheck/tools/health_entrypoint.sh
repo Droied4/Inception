@@ -40,6 +40,7 @@ check_service()
 
 	until nc -z "$host" "$port"; do
 		echo "Waiting for $name"
+		sed -i "s|<h2> $name : OK! </h2>|<h2> $name : Waiting... </h2>|" $file
 		sleep 2
 	done
 	echo "$name Operative!"
