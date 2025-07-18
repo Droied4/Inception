@@ -6,17 +6,32 @@ Throughout the development process, I made an effort to follow best practices, b
 
 ## Services
 ### Nginx
+<img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nginx/nginx-original.svg" width="180" height="180" alt="Nginx" />
+Reverse proxy and web server for routing traffic to other containers.
+
 ### Wordpress
+<img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/wordpress/wordpress-original.svg" width="180" height="180" alt="Wordpress" />
+Content management system served via PHP-FPM.
+
 ### Mariadb
+<img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mariadb/mariadb-original.svg" width="180" height="180" alt="Mariadb" />
+Lightweight MySQL-compatible database for WordPress data.
 
 ### Redis
-![alt text](https://github.com/adam-p/markdown-here/raw/master/src/common/images/icon48.png "Logo Title Text 1")
+<img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/redis/redis-original.svg" width="180" height="180" alt="Redis" />
+In-memory key-value store used for caching.
+
 ### Vsftpd
-![alt text](https://github.com/adam-p/markdown-here/raw/master/src/common/images/icon48.png "Logo Title Text 1")
+<img src="https://www.redeszone.net/app/uploads-redeszone.net/2019/11/image.psd180.jpg?quality=80" width="180" height="180" alt="Adminer" />
+Secure FTP server to upload and manage files.
+
 ### Adminer
-![alt text](https://github.com/adam-p/markdown-here/raw/master/src/common/images/icon48.png "Logo Title Text 1")
+<img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/adminer.svg" width="180" height="180" alt="Adminer" />
+Lightweight database management tool to interact with MariaDB.
+
 ### Healthcheck
-![alt text](https://github.com/adam-p/markdown-here/raw/master/src/common/images/icon48.png "Logo Title Text 1")
+<img src="https://cdn.prod.website-files.com/652ee4abdcbbba956ecb7d8f/66674c6c99ddb274f12d3b01_pulse_3914586.png" width="180" height="180" alt="Adminer" />
+Custom script that verifies all services are running properly.
 
 ## Architecture Diagram
 
