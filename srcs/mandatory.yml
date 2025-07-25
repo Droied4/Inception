@@ -3,17 +3,17 @@ networks:
 
 volumes:
   wp:
-    driver: local
-    driver_opts:
-      type: none
-      o: bind
-      device: ${WP_VOLUME}
+   driver: local
+   driver_opts:
+     type: none
+     o: bind
+     device: ${WP_VOLUME}
   db:
-    driver: local
-    driver_opts:
-      type: none
-      o: bind
-      device: ${MDB_VOLUME}
+   driver: local
+   driver_opts:
+     type: none
+     o: bind
+     device: ${MDB_VOLUME}
 
 secrets:
   db_password:
@@ -33,7 +33,6 @@ services:
         BASE_DIGEST:        ${ALPINE_DIGEST}
         NGINX_PORT:         ${NGINX_PORT}
         NGINX_SCRIPT:       ${SCRIPTS}
-        NGINX_VERSION:      ${NGINX_VERSION}
     image: nginx
     environment:
       - NGINX_PORT
@@ -96,7 +95,6 @@ services:
         BASE_DIGEST:      ${ALPINE_DIGEST}
         MARIADB_PORT:     ${MARIADB_PORT}
         MARIADB_SCRIPT:   ${SCRIPTS}
-        MARIADB_VERSION:  ${MARIADB_VERSION}
     image: mariadb
     secrets:
       - db_password

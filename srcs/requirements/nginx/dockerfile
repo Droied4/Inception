@@ -4,12 +4,11 @@ FROM alpine@sha256:${BASE_DIGEST}
 
 ARG NGINX_PORT
 ARG NGINX_SCRIPT
-ARG NGINX_VERSION
-ARG GTXT_VERSION=0.22.5-r0
-ARG OSSL_VERSION=3.3.3-r0 
 
 RUN 	apk update && \
-	apk add --no-cache nginx=${NGINX_VERSION} gettext=${GTXT_VERSION} openssl=${OSSL_VERSION}
+	    apk add --no-cache nginx \ 
+		gettext \
+		openssl
 
 COPY --chmod=644 ${NGINX_SCRIPT}nginx.cnf.template /
 COPY --chmod=744 ${NGINX_SCRIPT}nginx_entrypoint.sh /entrypoint.sh

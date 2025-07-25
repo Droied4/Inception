@@ -36,6 +36,8 @@ bonus:
 	@$(COMPOSE) ${MANDATORY_PATH} $(BONUS_PATH) up --build -d
 
 setup:
+	mkdir -p /home/deordone/data/wordpress
+	mkdir -p /home/deordone/data/mariadb
 	cp ${ENV_SAMPLE} srcs/.env
 	mkdir secrets
 

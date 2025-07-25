@@ -6,11 +6,10 @@ ARG WP_PORT
 ARG WP_SCRIPT
 ARG WP_CONF
 ARG PHP_VERSION
-ARG CURL_VERSION=8.12.1-r0
 
 RUN	apk update && \
 	apk add --no-cache \
-		curl=${CURL_VERSION} \
+		curl \
 		php${PHP_VERSION} \
 		php${PHP_VERSION}-fpm \ 
 		php${PHP_VERSION}-mysqli \ 

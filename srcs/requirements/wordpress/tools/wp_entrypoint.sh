@@ -19,9 +19,9 @@ download_wp()
 	if [ ! -f $volume_path/index.php ]; then
 	echo "Installing Wordpress"
 	cd $volume_path && \
-	curl -L -O https://wordpress.org/wordpress-${WP_VERSION}.tar.gz > /dev/null 2>&1 && \
-	tar -xzf wordpress-${WP_VERSION}.tar.gz --strip-components=1 && \
-	rm wordpress-${WP_VERSION}.tar.gz
+	curl -L -O https://wordpress.org/wordpress-latest.tar.gz > /dev/null 2>&1 && \
+	tar -xzf wordpress-latest.tar.gz --strip-components=1 && \
+	rm wordpress-latest.tar.gz
 	fi
 	echo "Wordpress Instaled!"
 }

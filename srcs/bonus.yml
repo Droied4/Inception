@@ -33,12 +33,10 @@ services:
         BASE_DIGEST:      ${ALPINE_DIGEST}
         VSFTPD_PORT:      ${VSFTPD_PORT}
         VSFTPD_SCRIPT:    ${SCRIPTS}
-        VSFTPD_VERSION:   ${VSFTPD_VERSION}
     secrets:
       - ftp_password
     image: vsftpd
     environment:
-      - VSFTPD_VERSION
       - VSFTPD_DATA_PORT
       - VSFTPD_PORT
       - VSFTPD_USER
@@ -62,7 +60,6 @@ services:
         BASE_DIGEST:      ${ALPINE_DIGEST}
         ADMINER_PORT:     ${ADMINER_PORT}
         ADMINER_SCRIPT:   ${SCRIPTS}
-        ADMINER_VERSION:  ${ADMINER_VERSION}
         PHP_VERSION:      ${PHP_VERSION}
     image: adminer
     environment:
@@ -85,10 +82,7 @@ services:
          BASE_DIGEST:      ${ALPINE_DIGEST}
          REDIS_PORT:       ${REDIS_PORT}
          REDIS_SCRIPT:     ${SCRIPTS}
-         REDIS_VERSION:    ${REDIS_VERSION}
      image: redis
-     environment:
-       - REDIS_VERSION
      expose:
        - "${REDIS_PORT}"
      networks:
